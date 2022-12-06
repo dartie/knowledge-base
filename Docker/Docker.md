@@ -236,7 +236,46 @@ RUN mkdir AliceFolder
 
 
 ### Docker compose
+Provides a yaml configuration for Docker file.
+
 TBC
+
+
+## Create image (Build image)
+This is achieved using the Dockerfile. A [Dockerfile](https://docs.docker.com/engine/reference/builder/) is a simple text-file that contains a list of commands that the Docker client calls while creating an image.
+
+```docker
+# our base image
+FROM python:3-onbuild
+
+# specify the port number the container should expose
+EXPOSE 5000
+
+# run the application
+CMD ["python", "./app.py"]
+```
+
+```bash
+docker build -t <tagname>:<tag_number> <Dockerfile location>
+```
+
+```bash
+docker build -t prakhar1989/catnip .
+```
+- `-t` : optional tag name
+- Dockerfile location
+
+If you don't have the `python:3-onbuild` image, the client will first pull the image and then create your image.
+
+
+## Publish images
+
+### Publish to AWS
+
+ 1. Login with : `docker login` and fill with credential of docker hub (https://hub.docker.com/)
+ 2. push the image with : `docker push <image>`
+
+### Place in the private repository (Docker - Private Registries)
 
 
 ## Run container of existing image
@@ -467,41 +506,6 @@ docker rm $(docker ps -a -q -f status=exited)
 ### Commands in container
 * ```CTRL + P + Q ``` : quit the container without stopping it
 * ```CTRL + D``` : quit the container stopping it
-
-
-### Create image
-This is achieved using the Dockerfile. A [Dockerfile](https://docs.docker.com/engine/reference/builder/) is a simple text-file that contains a list of commands that the Docker client calls while creating an image.
-
-```docker
-# our base image
-FROM python:3-onbuild
-
-# specify the port number the container should expose
-EXPOSE 5000
-
-# run the application
-CMD ["python", "./app.py"]
-```
-
-```bash
-docker build -t <tagname>:<tag_number> <Dockerfile location>
-```
-
-```bash
-docker build -t prakhar1989/catnip .
-```
-- `-t` : optional tag name
-- Dockerfile location
-
-If you don't have the `python:3-onbuild` image, the client will first pull the image and then create your image.
-
-
-### Publish to AWS
-
- 1. Login with : `docker login` and fill with credential of docker hub (https://hub.docker.com/)
- 2. push the image with : `docker push <image>`
-
-### Place in the private repository (Docker - Private Registries)
 
 
 ### List containers
