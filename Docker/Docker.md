@@ -132,10 +132,141 @@ The docker-machine start command outputs the comments to guide the process.
 
 
 
+## Create image
+
+### Docker file
+
+#### ARG
+Set variable in Docker file
+
+```Dockerfile
+ARG version=1.0
+
+RUN echo $version
+```
+
+#### FROM
+Pull baseline image from Docker hub
+
+```Dockerfile
+FROM <image-name>:[tag]
+```
+
+```Dockerfile
+FROM ubuntu:22.10
+```
+
+If the tag is not specified, the latest version is used
+
+```Dockerfile
+FROM ubuntu
+```
+
+
+#### ENV
+Set environment variable in docker image
+
+```Dockerfile
+ENV PATH="${PATH}:/kw-server/bin"
+```
+
+#### RUN
+Run command in docker image
+
+```Dockerfile
+RUN apt-get update
+```
+
+#### CMD
+A CMD command is used to set a default command that gets executed once you run the Docker Container. In case you provide a command with the Docker run command, the CMD arguments get ignored from the dockerfile. In the case of multiple CMD commands, only the last one gets executed.
+
+```Dockerfile
+CMD ["python3", "app.py"]
+```
+
+> :warning: Note that the CMD commands get ignored if you provide arguments in your Docker run command.
+> ```bash
+> sudo docker run -it ubuntu bash
+> ```
+
+#### ENTRYPOINT
+An ENTRYPOINT command, unlike CMD, does not ignore additional parameters that you specify in your Docker run command.
+
+#### RUN vs CMD vs ENTRYPOINT
+* [codewithyury](https://codewithyury.com/docker-run-vs-cmd-vs-entrypoint/)
+* [geeksforgeeks](https://www.geeksforgeeks.org/difference-between-run-vs-cmd-vs-entrypoint-docker-commands/)
+
+`RUN` is an image build step, the state of the container after a RUN command will be committed to the container image. A Dockerfile can have many RUN steps that layer on top of one another to build the image.
+
+`CMD` is the command the container executes by default when you launch the built image. A Dockerfile will only use the final CMD defined. The CMD can be overridden when starting a container with docker run $image $other_command.
+
+`ENTRYPOINT` is also closely related to CMD and can modify the way a container is started from an image.
+
+CMD: Sets default parameters that can be overridden from the Docker Command Line Interface (CLI) while running a docker container.
+ENTRYPOINT: Default parameters that cannot be overridden while executing Docker Containers with CLI parameters.
+
+#### WORKDIR
+Change/set working directory
+
+```Dockerfile
+WORKDIR /home
+```
+
+#### COPY
+Copy a file from host machine to the image
+
+```Dockerfile
+COPY . /klocwork
+```
+
+#### USER
+Switch user
+
+```Dockerfile
+USER Alice
+```
+
+```Dockerfile
+USER root
+RUN useradd Alice -s /bin/bash
+
+USER Alice
+RUN mkdir AliceFolder
+```
+
+
+### Docker compose
+TBC
+
+
+## Run container of existing image
+
+```bash
+docker run --name <container-name> -p <new_port>:<origin_port> --mac-address <MAC> --hostname <hostname> --user <user> --rm -it <IMAGE-NAME> <command>
+```
+
+example
+
+```bash
+docker run --name srva -p 27001:27001 --mac-address 02:42:ac:11:00:03 --hostname srva --user username --rm -it flex bash
+```
+
+where:
+* `--name <container-name>` : allows to specify the container name
+* `--mac-address <MAC>` : allows to specify the container MAC address
+* `--hostname <hostname>` : allows to specify the container hostname
+* `--user <user>` : 
+* `-p <new_port>:<origin_port>` : maps/expose the port from container to host
+* `--rm` : Automatically remove the container when it exits
+* `-i` : enables the interactive mode -> it starts and commands can be given using the host terminal
+* `-t` : Allocate a pseudo-TTY (usually used with `-i`, combined becomes `-it`)
+* `<IMAGE-NAME>` : image name to use
+* `<command>` : command to run at container creation
 
 
 
-## Usage
+
+## Docker images/containers management
 
 ### Pull image
 ```bash
