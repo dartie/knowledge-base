@@ -17,7 +17,7 @@
 
 
 
-![printer_parts_pic](:storage\\6b9f738a-a63a-4847-b0f9-9b0e5fc6c029\\9e8f8329.jpg)
+![printer_parts_pic](printer_parts_pic.jpg)
 
 
 
@@ -111,9 +111,9 @@ Notes:
 ##### Prusa i3
 
 * **Machine Settings - Extruder**
-  ![Machine_Settings-Extruder](:storage\\6b9f738a-a63a-4847-b0f9-9b0e5fc6c029\\a3e82656.jpg)
+  ![Machine_Settings-Extruder](Cura_Prusa_i3/Machine_Settings-Extruder.jpg)
 * **Machine Settings - Printer**
-  ![Machine_Settings-Printer](:storage\\6b9f738a-a63a-4847-b0f9-9b0e5fc6c029\\aa449bd8.jpg)
+  ![Machine_Settings-Printer](Cura_Prusa_i3/Machine_Settings-Printer.jpg)
 
 
 
@@ -157,7 +157,7 @@ Notes:
 
 ## Display info
 
-![display](:storage\\6b9f738a-a63a-4847-b0f9-9b0e5fc6c029\\4319006f.jpg)
+![display](display.jpg)
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbMTU2NTU4MDIzM119
 -->
