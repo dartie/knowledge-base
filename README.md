@@ -91,9 +91,9 @@
         extra:
           social:
             - icon: 'fontawesome/brands/github-alt'
-              link: 'https://github.com/oronymzy'
-        repo_name: 'oronymzy/tips'
-        repo_url: 'https://github.com/oronymzy/tips'
+              link: 'https://github.com/dartie'
+        repo_name: 'dartie/knowledge-base'
+        repo_url: 'https://github.com/dartie/knowledge-base'
         edit_uri: ''
         ```
         
