@@ -20,7 +20,7 @@
     - [Linux](#linux)
   - [Project structure](#project-structure)
     - [Example](#example)
-    - [File globals & locals](#file-globals--locals)
+    - [File globals \& locals](#file-globals--locals)
     - [Package visibility](#package-visibility)
     - [Import package inside a package](#import-package-inside-a-package)
   - [File structure](#file-structure)
@@ -175,12 +175,26 @@
     - [Get difference between two dates](#get-difference-between-two-dates)
     - [Convert float time to time.Time](#convert-float-time-to-timetime)
   - [Execute command](#execute-command)
+    - [Convert a string of arguments into a slice](#convert-a-string-of-arguments-into-a-slice)
     - [Run](#run-1)
     - [exec.Command](#execcommand)
     - [Multiple arguments](#multiple-arguments)
     - [Stdin and Stdout](#stdin-and-stdout)
     - [Capture output](#capture-output)
     - [Get realtime output](#get-realtime-output)
+  - [Run external process](#run-external-process)
+    - [Run the command](#run-the-command)
+      - [Output() vs Run()](#output-vs-run)
+    - [Custom Output Writer](#custom-output-writer)
+    - [Passing Input To Commands With STDIN](#passing-input-to-commands-with-stdin)
+    - [Killing a Child Process](#killing-a-child-process)
+    - [Capture output and error seperately](#capture-output-and-error-seperately)
+    - [Get return code](#get-return-code)
+    - [Set current working directory (cwd)](#set-current-working-directory-cwd)
+    - [Set environment variables](#set-environment-variables)
+    - [Hide window](#hide-window)
+    - [Custom commands for a different OS](#custom-commands-for-a-different-os)
+    - [Check early that a program is installed](#check-early-that-a-program-is-installed)
     - [My function](#my-function)
   - [Application's arguments](#applications-arguments)
     - [Flags](#flags)
@@ -4810,7 +4824,7 @@ func floatToTime(timeFloat float64) time.Time {
 
 ## Execute command
 
-​```go
+```go
 import "os/exec"
 ```
 
@@ -4945,60 +4959,498 @@ if err != nil {
 fmt.Println(string(out))
 ```
 
+### Get realtime output
+* [https://gist.github.com/hivefans/ffeaf3964924c943dd7ed83b406bbdea](https://gist.github.com/hivefans/ffeaf3964924c943dd7ed83b406bbdea)
+
+    ```go
+    package main
+
+    import (
+        "bufio"
+        "fmt"
+        "io"
+        "os"
+        "os/exec"
+        "strings"
+    )
+
+    func main() {
+        cmdName := "ping 127.0.0.1"
+        cmdArgs := strings.Fields(cmdName)
+
+        cmd := exec.Command(cmdArgs[0], cmdArgs[1:len(cmdArgs)]...)
+        stdout, _ := cmd.StdoutPipe()
+        cmd.Start()
+        oneByte := make([]byte, 100)
+        num := 1
+        for {
+            _, err := stdout.Read(oneByte)
+            if err != nil {
+                fmt.Printf(err.Error())
+                break
+            }
+            r := bufio.NewReader(stdout)
+            line, _, _ := r.ReadLine()
+            fmt.Println(string(line))
+            num = num + 1
+            if num > 3 {
+                os.Exit(0)
+            }
+        }
+
+        cmd.Wait()
+    }
+    ```
+
+-----------------------------------------------------------------
+
+## Run external process
+
+### Run the command
+
+```go
+cmd.Dir = ".."
+```
+
+```go
+package main
+import (
+    "fmt"
+    "log"
+    "os/exec"
+)
+funcmain() {
+    cmd := exec.Command("dir")
+    cmd.Dir = ".."
+    output, err := cmd.CombinedOutput()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Output:\n%s\n", string(output))
+}
+```
+
+#### Output() vs Run()
+
+**Resources:**
+* [sohamkamani.com](https://www.sohamkamani.com/golang/exec-shell-command/)
+* [blog.kowalczyk.info](https://blog.kowalczyk.info/article/wOYk/advanced-command-execution-in-go-with-osexec.html)
+
+
+* `Output()` method waits for the command to execute. Good for commands returning the output immediately (`ls`)
+    
+    ```go
+    // create a new *Cmd instance
+    // here we pass the command as the first argument and the arguments to pass to the command as the
+    // remaining arguments in the function
+    cmd := exec.Command("ls", "./")
+
+    // The `Output` method executes the command and
+    // collects the output, returning its value
+    out, err := cmd.Output()
+    if err != nil {
+    // if there was any error, print it here
+    fmt.Println("could not run command: ", err)
+    }
+    // otherwise, print the output from running the command
+    fmt.Println("Output: ", string(out))
+    ```
+
+
+* `Run()` method allows to print the output continuosly. Useful with long commands or commands which run indefinitely. Interact with the command using `cmd.Stdin` and `cmd.Stdout`
+
+    ```go
+    cmd := exec.Command("ping", "google.com")
+
+    // pipe the commands output to the applications
+    // standard output
+    cmd.Stdout = os.Stdout
+
+    // Run still runs the command and waits for completion
+    // but the output is instantly piped to Stdout
+    if err := cmd.Run(); err != nil {
+    fmt.Println("could not run command: ", err)
+    }    
+    ```
+
+    ```
+    > go run shellcommands/main.go
+
+    PING google.com (142.250.195.142): 56 data bytes
+    64 bytes from 142.250.195.142: icmp_seq=0 ttl=114 time=9.397 ms
+    64 bytes from 142.250.195.142: icmp_seq=1 ttl=114 time=37.398 ms
+    64 bytes from 142.250.195.142: icmp_seq=2 ttl=114 time=34.050 ms
+    64 bytes from 142.250.195.142: icmp_seq=3 ttl=114 time=33.272 ms
+
+    # ...
+    # and so on
+    ```
+
+### Custom Output Writer
+
+Instead of using `os.Stdout`, we can create our own writer that implements the `io.Writer` interface.
+
+Let’s create a writer that adds a "received output:" prefix before each output chunk:
+
+```go
+type customOutput struct{}
+
+func (c customOutput) Write(p []byte) (int, error) {
+	fmt.Println("received output: ", string(p))
+	return len(p), nil
+}
+```
+
+Now we can assign a new instance of customWriter as the output writer:
+
+```go
+cmd.Stdout = customOutput{}
+```
+
+If we run the application now, we will get the below output:
+
+
+```
+received output:  PING google.com (142.250.195.142): 56 data bytes
+64 bytes from 142.250.195.142: icmp_seq=0 ttl=114 time=187.825 ms
+
+received output:  64 bytes from 142.250.195.142: icmp_seq=1 ttl=114 time=19.489 ms
+
+received output:  64 bytes from 142.250.195.142: icmp_seq=2 ttl=114 time=117.676 ms
+
+received output:  64 bytes from 142.250.195.142: icmp_seq=3 ttl=114 time=57.780 ms
+```
+
+### Passing Input To Commands With STDIN
+In the previous examples, we executed commands without giving any input (or providing limited inputs as arguments). In most cases, input is given through the STDIN stream.
+
+One popular example of this is the grep command, where we can pipe the input from another command:
+
+```bash
+➜  ~ echo "1. pear\n2. grapes\n3. apple\n4. banana\n" | grep apple
+3. apple
+```
+
+Here, the input is passed to the grep command through STDIN. In this case the input is a list of fruit, and grep filters the line that contains "apple"
+
+The *Cmd instance provides us with an input stream which we can write into. Let’s use it to pass input to a grep child process:
+
+```go
+cmd := exec.Command("grep", "apple")
+
+// Create a new pipe, which gives us a reader/writer pair
+reader, writer := io.Pipe()
+// assign the reader to Stdin for the command
+cmd.Stdin = reader
+// the output is printed to the console
+cmd.Stdout = os.Stdout
+
+go func() {
+  defer writer.Close()
+  // the writer is connected to the reader via the pipe
+  // so all data written here is passed on to the commands
+  // standard input
+  writer.Write([]byte("1. pear\n"))
+  writer.Write([]byte("2. grapes\n"))
+  writer.Write([]byte("3. apple\n"))
+  writer.Write([]byte("4. banana\n"))
+}()
+
+if err := cmd.Run(); err != nil {
+  fmt.Println("could not run command: ", err)
+}
+```
+
+Output:
+
+```
+3. apple
+```
+
+### Killing a Child Process
+There are several commands that run indefinitely, or need an explicit signal to stop.
+
+For example, if we start a web server using `python3 -m http.server` or execute `sleep 10000` the resulting child processes will run for a very long time (or indefinitely).
+
+To stop these processes, we need to send a kill signal from our application. We can do this by adding a context instance to the command.
+
+If the context gets cancelled, the command terminates as well.
+
+```go
+ctx := context.Background()
+// The context now times out after 1 second
+// alternately, we can call `cancel()` to terminate immediately
+ctx, cancel = context.WithTimeout(ctx, 1*time.Second)
+
+cmd := exec.CommandContext(ctx, "sleep", "100")
+
+out, err := cmd.Output()
+if err != nil {
+  fmt.Println("could not run command: ", err)
+}
+fmt.Println("Output: ", string(out))
+```
+
+This will give the following output after 1 second has elapsed:
+
+```
+could not run command:  signal: killed
+Output:
+```
+
+Terminating child processes is useful when you want to limit the time spent in running a command or want to create a fallback incase a command doesn’t return a result on time.
+
+
+### Capture output and error seperately
+
+```go
+    cmd := exec.Command("dir")
+    cmd.Dir = ".."
+    var stdout, stderr bytes.Buffer
+    cmd.Stderr = &stderr
+    cmd.Stdout = &stdout
+    
+    err := cmd.Run()
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    output, err := string(stdout.Bytes()), string(stderr.Bytes())
+```
+
+### Get return code
+Since golang version 1.12, the exit code is available natively and in a cross-platform manner. See [ExitError](https://golang.org/pkg/os/exec/#ExitError) and [ExitCode()](https://golang.org/pkg/os/#ProcessState.ExitCode).
+
+> ExitCode returns the exit code of the exited process, or -1 if the process hasn't exited or was terminated by a signal.
+
+* Basic snippet
+
+    ```go
+    if err := cmd.Run() ; err != nil {
+        if exitError, ok := err.(*exec.ExitError); ok {
+            return exitError.ExitCode()
+        }
+    }
+    ```
+
+* Complete snippet
+
+    ```go
+    package main
+
+    import "os/exec"
+    import "log"
+    import "syscall"
+
+    func main() {
+        cmd := exec.Command("git", "blub")
+
+        if err := cmd.Start(); err != nil {
+            log.Fatalf("cmd.Start: %v", err)
+        }
+
+        if err := cmd.Wait(); err != nil {
+            if exiterr, ok := err.(*exec.ExitError); ok {
+                log.Printf("Exit Status: %d", exiterr.ExitCode())
+            } else {
+                log.Fatalf("cmd.Wait: %v", err)
+            }
+        }
+    }
+    ```
+
+
+* Advanced snippet
+
+    ```go
+    package utils
+
+    import (
+        "bytes"
+        "log"
+        "os/exec"
+        "syscall"
+    )
+
+    const defaultFailedCode = 1
+
+    func RunCommand(name string, args ...string) (stdout string, stderr string, exitCode int) {
+        log.Println("run command:", name, args)
+        var outbuf, errbuf bytes.Buffer
+        cmd := exec.Command(name, args...)
+        cmd.Stdout = &outbuf
+        cmd.Stderr = &errbuf
+
+        err := cmd.Run()
+        stdout = outbuf.String()
+        stderr = errbuf.String()
+
+        if err != nil {
+            // try to get the exit code
+            if exitError, ok := err.(*exec.ExitError); ok {
+                ws := exitError.Sys().(syscall.WaitStatus)
+                exitCode = ws.ExitStatus()
+            } else {
+                // This will happen (in OSX) if `name` is not available in $PATH,
+                // in this situation, exit code could not be get, and stderr will be
+                // empty string very likely, so we use the default fail code, and format err
+                // to string and set to stderr
+                log.Printf("Could not get exit code for failed program: %v, %v", name, args)
+                exitCode = defaultFailedCode
+                if stderr == "" {
+                    stderr = err.Error()
+                }
+            }
+        } else {
+            // success, exitCode should be 0 if go is ok
+            ws := cmd.ProcessState.Sys().(syscall.WaitStatus)
+            exitCode = ws.ExitStatus()
+        }
+        log.Printf("command result, stdout: %v, stderr: %v, exitCode: %v", stdout, stderr, exitCode)
+        return
+    }
+    ```
+
+* Alternative version
+
+    ```go
+    err := cmd.Run()
+
+    var (
+        ee *exec.ExitError
+        pe *os.PathError
+    )
+
+    if errors.As(err, &ee) {
+        log.Println("exit code error:", ee.ExitCode()) // ran, but non-zero exit code
+
+    } else if errors.As(err, &pe) {
+        log.Printf("os.PathError: %v", pe) // "no such file ...", "permission denied" etc.
+
+    } else if err != nil {
+        log.Printf("general error: %v", err) // something really bad happened!
+
+    } else {
+        log.Println("success!") // ran without error (exit code zero)
+    }
+    ```
+
+### Set current working directory (cwd)
+
+```go
+cmd := exec.Command("dir")
+cmd.Dir = ".."
+```
+
+```go
+package main
+import (
+    "fmt"
+    "log"
+    "os/exec"
+)
+funcmain() {
+    cmd := exec.Command("dir")
+    cmd.Dir = ".."
+    output, err := cmd.CombinedOutput()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Output:\n%s\n", string(output))
+}
+```
+
+### Set environment variables
+
+```go
+env := make(map[string]string)  // env can be nil if used as function argument
+
+env["variable"] = "value"
+
+// set the environment variables
+cmd.Env = os.Environ()
+if env != nil {
+    for k, v := range env {
+        cmd.Env = append(cmd.Env, k+"="+v)
+    }
+}
+```
+
+or
+
+
+```go
+cmd := exec.Command("programToExecute")
+
+additionalEnv := "FOO=bar"
+newEnv := append(os.Environ(), additionalEnv))
+cmd.Env = newEnv
+
+out, err := cmd.Output()
+if err != nil {
+    log.Fatalf("cmd.Run() failed with %s\n", err)
+}
+fmt.Printf("%s", out)
+```
+
+### Hide window
+Useful when some confirmation messageboxes are prompted in case of issue, and the user interaction is then required.
+
+```go
+cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+```
+
+avoid the code execution to hang.
+
 ```go
 cmd := exec.Command("tasklist", "/fo", "csv", "/nh")
 cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
-out, err := cmd.CombinedOutput()
+out, err := cmd.Output()
 if err != nil {
     fmt.Println(err)
 }
 fmt.Printf(string(out))
 ```
 
-### Get realtime output
-* [https://gist.github.com/hivefans/ffeaf3964924c943dd7ed83b406bbdea](https://gist.github.com/hivefans/ffeaf3964924c943dd7ed83b406bbdea)
+### Custom commands for a different OS
+
+In same cases, you need to detect the operative system where the program is running:
 
 ```go
-package main
+import "runtime"
+```
 
-import (
-	"bufio"
-	"fmt"
-	"io"
-	"os"
-	"os/exec"
-	"strings"
-)
-
-func main() {
-	cmdName := "ping 127.0.0.1"
-	cmdArgs := strings.Fields(cmdName)
-
-	cmd := exec.Command(cmdArgs[0], cmdArgs[1:len(cmdArgs)]...)
-	stdout, _ := cmd.StdoutPipe()
-	cmd.Start()
-	oneByte := make([]byte, 100)
-	num := 1
-	for {
-		_, err := stdout.Read(oneByte)
-		if err != nil {
-			fmt.Printf(err.Error())
-			break
-		}
-		r := bufio.NewReader(stdout)
-		line, _, _ := r.ReadLine()
-		fmt.Println(string(line))
-		num = num + 1
-		if num > 3 {
-			os.Exit(0)
-		}
-	}
-
-	cmd.Wait()
+```go
+if runtime.GOOS == "windows" {
+    cmd = exec.Command("dir")
+} else {
+    cmd = exec.Command("ls")
 }
 ```
 
+
+### Check early that a program is installed
+
+Imagine you wrote a program that takes a long time to run. At the end, you call executable foo to perform an essential task.
+If foo executable is not present, the call will fail.
+It’s a good idea to detect lack of executable foo at the beginning and fail early with descriptive error message.
+You can do it using `exec.LookPath`.
+
+```go
+func checkLsExists() {
+    path, err := exec.LookPath("ls")
+    if err != nil {
+        fmt.Printf("didn't find 'ls' executable\n")
+    } else {
+        fmt.Printf("'ls' executable is in '%s'\n", path)
+    }
+}
+```
+
+-----------------------------------------------------------------
+
 ### My function
+
 ```go
 func runProcess(command string, env map[string]string) (string, string) {
 	// prepare arguments for running the command.
@@ -5026,17 +5478,9 @@ func runProcess(command string, env map[string]string) (string, string) {
 	}
 
 	// execute and get the output
-	out, err := cmd.CombinedOutput()
+	out, err := cmd.Output()
 
-	// handle Error
-	var errOut string
-	if err != nil {
-		errOut = err.Error()
-	} else {
-		errOut = ""
-	}
-
-	return fmt.Sprintf("%s", out), errOut
+	return fmt.Sprintf("%s", out), err
 }
 ```
 
