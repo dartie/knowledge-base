@@ -1,6 +1,32 @@
 # Gin Gonic
-- [wesionary-team](https://medium.com/wesionary-team/getting-started-with-go-gin-framework-6943f8f5f882)
-- [https://www.youtube.com/watch?v=qR0WnWL2o1Q&t=27s](https://www.youtube.com/watch?v=qR0WnWL2o1Q&t=27s)
+
+- [Gin Gonic](#gin-gonic)
+	- [Include Templates](#include-templates)
+	- [Render html](#render-html)
+	- [Response](#response)
+		- [Use http methods](#use-http-methods)
+	- [Serve static files](#serve-static-files)
+	- [Routes](#routes)
+		- [Basic - route and function in one place](#basic---route-and-function-in-one-place)
+		- [Basic route calls a function](#basic-route-calls-a-function)
+		- [Group route](#group-route)
+	- [Use middleware](#use-middleware)
+		- [Use middleware for a specific route](#use-middleware-for-a-specific-route)
+		- [Use middleware for a group of routes](#use-middleware-for-a-group-of-routes)
+			- [Syntax1 - Use in different statement](#syntax1---use-in-different-statement)
+			- [Syntax2 - Use in group definition](#syntax2---use-in-group-definition)
+			- [Two groups with the same URI index can be defined](#two-groups-with-the-same-uri-index-can-be-defined)
+		- [Popular middleware](#popular-middleware)
+			- [AUTH](#auth)
+		- [AuthRequired](#authrequired)
+	- [Read POST request](#read-post-request)
+		- [Using interface{}](#using-interface)
+		- [Using struct](#using-struct)
+- [Notes from websites](#notes-from-websites)
+	- [Training 1 by Pragmatic Reviews](#training-1-by-pragmatic-reviews)
+	- [Training 2 by WesionaryTEAM](#training-2-by-wesionaryteam)
+		- [Routes in different file](#routes-in-different-file)
+- [To see](#to-see)
 
 
 ## Include Templates
@@ -339,7 +365,33 @@ func AuthRequired() gin.HandlerFunc {
 }
 ```
 
+## Read POST request
 
+### Using interface{}
+
+```go
+// Get post data
+var postData interface{}
+c.BindJSON(&postData)
+
+value := postData.(map[string]interface{})["VM"])
+```
+
+### Using struct
+
+```go
+type Result struct {
+    Assets []string `json: "assets"`
+    VM     bool     `json: "vm"`
+    HostId string   `json:"hostid"`
+}
+
+// Get post data
+var postData Result
+c.BindJSON(&postData)
+
+value := postData.VM
+```
 
 # Notes from websites
 

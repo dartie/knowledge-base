@@ -66,6 +66,7 @@
     - [Bytes and rune](#bytes-and-rune)
     - [String](#string)
       - [String methods](#string-methods)
+        - [EqualFold](#equalfold)
         - [ToUpper](#toupper)
         - [ToLower](#tolower)
         - [Contains](#contains)
@@ -76,9 +77,10 @@
         - [Trim](#trim)
         - [TrimSpace](#trimspace)
         - [Title](#title)
-        - [EqualFold](#equalfold)
+        - [EqualFold](#equalfold-1)
         - [HasPrefix](#hasprefix)
         - [HasSuffix](#hassuffix)
+        - [Create string pointer](#create-string-pointer)
         - [Convert number to string](#convert-number-to-string)
         - [Convert string to number](#convert-string-to-number)
       - [Generate random string](#generate-random-string)
@@ -88,6 +90,8 @@
     - [Array](#array)
     - [Slice](#slice)
       - [Remove element from slice](#remove-element-from-slice)
+      - [Clear slice](#clear-slice)
+      - [Sort a slice in reverse mode](#sort-a-slice-in-reverse-mode)
     - [Map](#map)
       - [Map declaration and initialization as global](#map-declaration-and-initialization-as-global)
       - [Check if a key is in the map](#check-if-a-key-is-in-the-map)
@@ -128,6 +132,10 @@
     - [defer](#defer)
     - [recover](#recover)
     - [End program without stack messages](#end-program-without-stack-messages)
+  - [Filepath](#filepath)
+    - [Get current working directory](#get-current-working-directory)
+    - [Get current source code file path](#get-current-source-code-file-path)
+    - [Get executable path](#get-executable-path)
   - [File](#file)
     - [Check if file exists](#check-if-file-exists)
     - [Get Folder content](#get-folder-content)
@@ -143,6 +151,10 @@
     - [Write file from array](#write-file-from-array)
     - [Parse XML](#parse-xml)
     - [Parse JSON](#parse-json)
+      - [Parse JSON with struct (typed)](#parse-json-with-struct-typed)
+      - [Parse JSON with interface (untyped)](#parse-json-with-interface-untyped)
+      - [My functions](#my-functions)
+      - [Float with decimal](#float-with-decimal)
     - [Write a file](#write-a-file)
   - [Database](#database)
     - [Sqlite3](#sqlite3)
@@ -173,6 +185,8 @@
     - [Parse dates/times](#parse-datestimes)
     - [Add days/time to time](#add-daystime-to-time)
     - [Get difference between two dates](#get-difference-between-two-dates)
+    - [Compare dates](#compare-dates)
+    - [Get execution time](#get-execution-time)
     - [Convert float time to time.Time](#convert-float-time-to-timetime)
   - [Execute command](#execute-command)
     - [Convert a string of arguments into a slice](#convert-a-string-of-arguments-into-a-slice)
@@ -217,11 +231,13 @@
     - [Embed a text file and get the content in a variable](#embed-a-text-file-and-get-the-content-in-a-variable)
     - [Embed a folder and access all files](#embed-a-folder-and-access-all-files)
     - [Recreate embedded filesystems from embed.FS](#recreate-embedded-filesystems-from-embedfs)
+  - [Send email](#send-email)
   - [Misc](#misc)
     - [Windows registry](#windows-registry)
     - [Notify in os](#notify-in-os)
   - [API](#api)
     - [Slack](#slack)
+      - [slack-go-webhook](#slack-go-webhook)
     - [Salesforce](#salesforce)
     - [Prometheus](#prometheus)
   - [Database](#database-1)
@@ -1756,6 +1772,19 @@ Import `strings`
 import "strings"
 ```
 
+##### EqualFold
+
+Reports whether 2 strings are equal under Unicode case-folding, which is a more general form of case-insensitivity.
+
+* [geeksforgeeks](https://www.geeksforgeeks.org/strings-equalfold-function-in-golang-with-examples/)
+
+
+```go
+if strings.EqualFold(x, y) {
+
+}
+```
+
 ##### ToUpper
 
 Turn the string to upper case
@@ -1902,6 +1931,25 @@ if strings.HasSuffix(myString, ".xml") {
     
 }
 ```
+
+##### Create string pointer
+
+* [aguidehub.com](https://aguidehub.com/blog/2022-09-12-golang-convert-pointer-to-string/)
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  var strPointer = new(string)
+  *strPointer = "aGuideHub"
+
+  strPointerValue := *strPointer
+  fmt.Println(strPointerValue)
+}
+```
+
 
 ##### Convert number to string
 ```go
@@ -2227,10 +2275,36 @@ fmt.Println(slice3)      // -> [2 3 4]
 ```
 
 #### Remove element from slice
+
 ```go
 if os.Args[1] == "QAC" || os.Args[1] == "QACPP" {
 	os.Args = append(os.Args[:1], os.Args[2:]...)
 }
+```
+
+#### Clear slice
+
+```go
+slice1 = nil
+```
+
+```go
+slice1 := []int{1,2,3,4}
+slice1 = nil
+slice1 = []int{5}
+fmt.Println(slice1)
+```
+
+```
+[5]
+```
+
+#### Sort a slice in reverse mode
+
+* [askgolang.com](https://askgolang.com/how-to-sort-a-slice-of-string-in-reverse-in-golang/)
+
+```go
+sort.Sort(sort.Reverse(sort.StringSlice(mySlice)))
 ```
 
 ### Map
@@ -2261,6 +2335,27 @@ countryCapitalMap := map[string]string {
 !!! info
     Last element needs to have the comma `,`
 
+
+As usual in Go, we can declare our variable first, and then assign it a value:
+
+```go
+var menu map[string]float64
+menu = map[string]float64{
+    "eggs": 1.75,
+    "bacon": 3.22,
+    "sausage": 1.89,
+}
+```
+
+Alternatively, we can use the short declaration syntax to do both operations in one step:
+
+```go
+menu := map[string]float64{
+    "eggs": 1.75,
+    "bacon": 3.22,
+    "sausage": 1.89,
+}
+```
 
 #### Map declaration and initialization as global
 ```go
@@ -3679,6 +3774,48 @@ func main() {
 
 -----------------------------------------------------------------------------------
 
+## Filepath
+
+### Get current working directory
+
+```go
+// Get current working directory
+func getcwd() string {
+  path, _ := os.Getwd()
+
+  return path
+}
+```
+
+### Get current source code file path
+
+```go
+// Get current source code file path
+func getSrcPath() string {
+  _, filename, _, ok := runtime.Caller(0)
+  if !ok {
+    return ""
+  }
+
+  return filepath.Dir(filename)
+}
+```
+
+### Get executable path
+
+```go
+// Get executable path
+func getExePath() string {
+  ex, err := os.Executable()
+  if err != nil {
+    return ""
+  }
+  return filepath.Dir(ex)
+}
+```
+
+-----------------------------------------------------------------------------------
+
 ## File
 
 ### Check if file exists
@@ -4079,6 +4216,140 @@ func getXmlAttrs(node *xmlquery.Node) map[string]string {
 ```
 
 ### Parse JSON
+
+#### Parse JSON with struct (typed)
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "log"
+    "os"
+)
+
+func main() {
+    // read file
+	settingsBytes, err1 := os.ReadFile(settingFile)
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
+	settingsStr := string(settingsBytes)
+
+	rawData := []byte(settingsStr)
+	var payload interface{}                  //The interface where we will save the converted JSON data.
+	err := json.Unmarshal(rawData, &payload) // Convert JSON data into interface{} type
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	m := payload.(map[string]interface{}) // To use the converted data we will need to convert it into a map[string]interface{}
+}
+```
+
+
+#### Parse JSON with interface (untyped)
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "log"
+    "os"
+)
+
+func main() {
+    // read file
+	settingsBytes, err1 := os.ReadFile(settingFile)
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
+	settingsStr := string(settingsBytes)
+
+	rawData := []byte(settingsStr)
+	var payload interface{}                  //The interface where we will save the converted JSON data.
+	err := json.Unmarshal(rawData, &payload) // Convert JSON data into interface{} type
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	m := payload.(map[string]interface{}) // To use the converted data we will need to convert it into a map[string]interface{}
+}
+```
+
+#### My functions
+
+```go
+func readSettingsInterface(settingFile string) map[string]interface{} {
+	/* Read settings */
+	settingsMap = make(map[string]string)
+
+	if _, err := os.Stat(settingsFile); err == nil {
+		settingsBytes, err := os.ReadFile(settingsFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		settingsStr := string(settingsBytes)
+
+		json.Unmarshal([]byte(settingsStr), &settingsMap)
+
+	} else {
+		log.Fatalf(color.Red.Sprint(settingsFile + " does not exist!"))
+	}
+
+	return settingsMap
+}
+
+func readSettings(settingsFile string) map[string]string {
+	/* Read settings */
+	settingsMap = make(map[string]string)
+
+	if _, err := os.Stat(settingsFile); err == nil {
+		settingsBytes, err := os.ReadFile(settingsFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		settingsStr := string(settingsBytes)
+
+		// remove json comments
+		settingsStrNoComments := removeJsonComments(settingsStr)
+
+		json.Unmarshal([]byte(settingsStrNoComments), &settingsMap)
+
+	} else {
+		log.Fatalf(color.Red.Sprint(settingsFile + " does not exist!"))
+	}
+
+	return settingsMap
+}
+```
+
+#### Float with decimal
+Float with decimal = 0 (e..g 2.0 ) to json is rapresented as an int (e.g. 2). Here a way to get the decimal part when writing to json (e.g. 2.0 )
+
+* [stackoverflow.com](https://stackoverflow.com/questions/52446730/stop-json-marshal-from-stripping-trailing-zero-from-floating-point-number/52446854#52446854)
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type Pt struct {
+	Value json.Number
+	Unit  string
+}
+
+func main() {
+	data, err := json.Marshal(Pt{json.Number("40.0"), "some_string"})
+	fmt.Println(string(data), err)
+}
+```
 
 ### Write a file
 * [https://golangbot.com/write-files/](https://golangbot.com/write-files/)
@@ -4798,6 +5069,77 @@ func main() {
     days := t2.Sub(t1).Hours() / 24
     fmt.Println(days) // 366
 }
+```
+
+### Compare dates
+
+```go
+package main
+  
+import "fmt"
+  
+// importing time module
+import "time"
+  
+// Main function
+func main() {
+  
+    today := time.Now()
+    tomorrow := today.Add(24 * time.Hour)
+  
+    // Using time.Before() method
+    g1 := today.Before(tomorrow)
+    fmt.Println("today before tomorrow:", g1)
+  
+    // Using time.After() method
+    g2 := tomorrow.After(today)
+    fmt.Println("tomorrow after today:", g2)
+  
+}
+```
+
+Output :
+```
+today before tomorrow: true
+tomorrow after today: true
+```
+
+### Get execution time
+
+```go
+package main
+
+// importing time module
+import (
+	"fmt"
+	"time"
+)
+
+// Main function
+func main() {
+
+	// init start variable for measuring the execution time
+	start := time.Now()
+
+    // ... Do things
+	//time.Sleep(2 * time.Second)
+
+	// get execution time
+	executionTime := time.Since(start)
+
+	fmt.Println(executionTime)
+}
+```
+
+Output:
+```
+2s
+```
+
+`executionTime` can be converted to string using 
+
+```go
+executionTime.String()
 ```
 
 ### Convert float time to time.Time
@@ -6333,6 +6675,42 @@ func main() {
 
 -----------------------------------------------------------------------------------
 
+## Send email
+
+```go
+package main
+
+import (
+   "fmt"
+   "net/smtp"
+)
+
+func sendEmail(from string, password string, to []string, message string) error {
+   // smtp server configuration.
+   smtpHost := "smtp.gmail.com"
+   smtpPort := "587"
+
+   // Authentication.
+   auth := smtp.PlainAuth("", from, password, smtpHost)
+
+   // Sending email.
+   err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, []byte(message))
+
+   return err
+}
+
+func main() {
+
+   err := sendEmail("from_email@gmail.com", "email_password", []string{"sender@example.com"}, "Test email")
+
+   if err != nil {
+      fmt.Println("Error happened: " + err.Error())
+   }
+}
+```
+
+-----------------------------------------------------------------------------------
+
 ## Misc
 
 ### Windows registry
@@ -6419,6 +6797,68 @@ func getPRQAFsInstalledFromWinregistry() map[string]string {
 - [https://github.com/slack-go/slack](https://github.com/slack-go/slack)
 - [go-slackbot Article](https://blog.gopheracademy.com/advent-2017/go-slackbot/)
 - [slack-bot-in-golang](https://www.opsdash.com/blog/slack-bot-in-golang.html)
+
+#### slack-go-webhook
+
+* [slack-go-webhook](https://github.com/ashwanthkumar/slack-go-webhook)
+
+```go
+package main
+
+import "github.com/ashwanthkumar/slack-go-webhook"
+import "fmt"
+
+func main() {
+    webhookUrl := "https://hooks.slack.com/services/foo/bar/baz"
+
+    attachment1 := slack.Attachment {}
+    attachment1.AddField(slack.Field { Title: "Author", Value: "Ashwanth Kumar" }).AddField(slack.Field { Title: "Status", Value: "Completed" })
+    attachment1.AddAction(slack.Action { Type: "button", Text: "Book flights 🛫", Url: "https://flights.example.com/book/r123456", Style: "primary" })
+    attachment1.AddAction(slack.Action { Type: "button", Text: "Cancel", Url: "https://flights.example.com/abandon/r123456", Style: "danger" })
+    payload := slack.Payload {
+      Text: "Hello from <https://github.com/ashwanthkumar/slack-go-webhook|slack-go-webhook>, a Go-Lang library to send slack webhook messages.\n<https://golangschool.com/wp-content/uploads/golang-teach.jpg|golang-img>",
+      Username: "robot",
+      Channel: "#general",
+      IconEmoji: ":monkey_face:",
+      Attachments: []slack.Attachment{attachment1},
+    }
+    err := slack.Send(webhookUrl, "", payload)
+    if len(err) > 0 {
+      fmt.Printf("error: %s\n", err)
+    }
+}
+```
+
+```go
+/* Slack notifications */
+func notifySlack(webhookReceiver string, msgText string, msgType string, attachments []slack.Field) {
+	var color = new(string)
+	switch msgType {
+	case "success":
+		*color = "#34eb71" // green
+	case "error":
+		*color = "#eb4034" // red
+	case "warning":
+		*color = "#f5ca20" // orange
+	}
+
+	attachment1 := slack.Attachment{Color: color}
+
+	for _, f := range attachments {
+		attachment1.AddField(f)
+	}
+
+	payload := slack.Payload{
+		Text:        msgText,
+		Attachments: []slack.Attachment{attachment1},
+		Markdown:    true,
+	}
+	slackErr := slack.Send(webhookReceiver, "", payload)
+	if len(slackErr) > 0 {
+		fmt.Printf("error: %s\n", slackErr)
+	}
+}
+```
 
 ### Salesforce
 
