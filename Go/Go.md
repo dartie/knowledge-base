@@ -239,6 +239,8 @@
     - [Slack](#slack)
       - [slack-go-webhook](#slack-go-webhook)
     - [Salesforce](#salesforce)
+      - [simplesalesforce](#simplesalesforce)
+      - [go-soapforce](#go-soapforce)
     - [Prometheus](#prometheus)
   - [Database](#database-1)
   - [Reference](#reference)
@@ -6865,6 +6867,105 @@ func notifySlack(webhookReceiver string, msgText string, msgType string, attachm
 - [https://github.com/simpleforce/simpleforce](https://github.com/simpleforce/simpleforce)
 - [https://developer.salesforce.com/blogs/2020/02/soql-tags-for-golang.html](https://developer.salesforce.com/blogs/2020/02/soql-tags-for-golang.html)
 - [https://www.cdata.com/kb/tech/salesforce-odbc-go-linux.rst](https://www.cdata.com/kb/tech/salesforce-odbc-go-linux.rst)
+
+
+#### simplesalesforce
+
+* [simpleforce](github.com/simpleforce/simpleforce)
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/simpleforce/simpleforce"
+)
+
+var (
+	sfURL      = "Custom or instance URL, for example, 'https://na01.salesforce.com/'"
+	sfUser     = "Username of the Salesforce account."
+	sfPassword = "Password of the Salesforce account."
+	sfToken    = "Security token, could be omitted if Trusted IP is configured."
+)
+
+func createClient() *simpleforce.Client {
+	client := simpleforce.NewClient(sfURL, simpleforce.DefaultClientID, simpleforce.DefaultAPIVersion)
+	if client == nil {
+		// handle the error
+
+		return nil
+	}
+
+	err := client.LoginPassword(sfUser, sfPassword, sfToken)
+	if err != nil {
+		// handle the error
+
+		fmt.Println(err)
+	}
+
+	// Do some other stuff with the client instance if needed.
+
+	return client
+}
+
+func main() {
+    client := createClient()
+    
+    q := "Some SOQL Query String"
+	result, err := client.Query(q) // Note: for Tooling API, use client.Tooling().Query(q)
+	
+    if err != nil {
+		// handle the error
+		fmt.Println(err)
+	}
+
+	for _, record := range result.Records {
+		// access the record as SObjects.
+		fmt.Println(record)
+	}
+}
+```
+
+> Note: Use `"https://test.salesforce.com/"` if you need to access the sandbox instance instead of a Production instance
+
+
+#### go-soapforce
+
+* [go-soapforce](https://github.com/tzmfreedom/go-soapforce)
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/tzmfreedom/go-soapforce"
+)
+
+func main() {
+	client := soapforce.NewClient()
+	client.SetLoginUrl("test.salesforce.com")
+	res, err := client.Login("Custom or instance URL, for example, 'https://na01.salesforce.com/'", "<passoword><secret-token>")
+	client.SetApiVersion("52.0")
+	client.SetDebug(true)
+	
+    resD, errD := client.DescribeSObject("Account")
+
+	assetFields = "Id, ContactId, AccountId, Account.Name, ParentId, RootAssetId, Product2.Name, ProductCode"
+	queryString := fmt.Sprintf("SELECT %s FROM Asset WHERE Id = '%s'", assetFields, "02i5Y00000hWe1IQAS")
+
+	result, errQ := client.Query(queryString)
+
+	for _, assetRecord_ := range result.Records {
+		assetRecord := assetRecord_.Fields
+		sfOpportunityAsset := assetRecord["AccountId"]
+		_ = sfOpportunityAsset
+	}
+}
+```
+
+> Note: Use `"test.salesforce.com/"` if you need to access the sandbox instance instead of a Production instance
 
 ### Prometheus
 
