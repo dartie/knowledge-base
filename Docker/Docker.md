@@ -102,6 +102,15 @@ sudo apt-get -y install docker.io
 
 ### Linux
 
+```bash
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo dnf -y install docker-compose
+```
+
+#### Linux Manual steps
+
 The Post-installation steps for Linux documentation reveals the following steps:
 
 1. Create the docker group.
