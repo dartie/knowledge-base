@@ -68,11 +68,39 @@ Then there are official and user images, which can be both base and child images
 2. Download the installer from the website https://store.docker.com/editions/community/docker-ce-desktop-windows (direct web installer link: https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe )
 
 
+### Linux
+
+```bash
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo dnf -y install docker-compose
+sudo systemctl enable docker
+sudo systemctl start docker
+```
+
+#### Linux Manual steps
+
+The Post-installation steps for Linux documentation reveals the following steps:
+
+1. Create the docker group.
+    ```bash
+    sudo groupadd docker
+    ```
+1. Add the user to the docker group.
+    ```bash
+    sudo usermod -aG docker $(whoami)
+    ```
+1. Log out and log back in to ensure docker runs with correct permissions.
+
+1. Start docker.
+    ```bash
+    sudo service docker start
+    ```
 
 
+#### Linux Mint 18.2 (Sonya)
 
-
-### Linux Mint 18.2 (Sonya)
 ```shell
 sudo apt-get update
 
@@ -95,39 +123,12 @@ sudo apt-get update
 sudo apt-get install docker-ce
 ```
 
-### Kali - Ubuntu
+#### Kali - Ubuntu
 ```bash
 sudo apt-get -y install docker.io
 ```
 
-### Linux
 
-```bash
-sudo dnf -y install dnf-plugins-core
-sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-sudo dnf -y install docker-compose
-```
-
-#### Linux Manual steps
-
-The Post-installation steps for Linux documentation reveals the following steps:
-
-1. Create the docker group.
-    ```bash
-    sudo groupadd docker
-    ```
-1. Add the user to the docker group.
-    ```bash
-    sudo usermod -aG docker $(whoami)
-    ```
-1. Log out and log back in to ensure docker runs with correct permissions.
-
-1. Start docker.
-    ```bash
-    sudo service docker start
-    ```
-    
 
 ### Mac OS X
 
