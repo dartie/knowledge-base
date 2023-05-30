@@ -301,6 +301,7 @@ docker run --name srva -p 27001:27001 --mac-address 02:42:ac:11:00:03 --hostname
 ```
 
 where:
+
 * `--name <container-name>` : allows to specify the container name
 * `--mac-address <MAC>` : allows to specify the container MAC address
 * `--hostname <hostname>` : allows to specify the container hostname
@@ -311,8 +312,6 @@ where:
 * `-t` : Allocate a pseudo-TTY (usually used with `-i`, combined becomes `-it`)
 * `<IMAGE-NAME>` : image name to use
 * `<command>` : command to run at container creation
-
-
 
 
 ## Docker images/containers management
