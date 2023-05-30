@@ -285,8 +285,9 @@ If you don't have the `python:3-onbuild` image, the client will first pull the i
  1. Login with : `docker login` and fill with credential of docker hub (https://hub.docker.com/)
  2. push the image with : `docker push <image>`
 
-### Place in the private repository (Docker - Private Registries)
 
+### Place in the private repository (Docker - Private Registries)
+TBC
 
 ## Run container of existing image
 
@@ -393,6 +394,11 @@ docker run "[OPTIONS]" "<image_name>" "<cmd_to_execute_in_container"
   * `--privileged`: allows to run special commands such as `ifconfig eth0 down` which otherwise returns `SIOCSIFFLAGS: Operation not permitted`
   * `--mac-address`: run the container with a specific mac address
   * `--hostname`: run the container with a specific hostname
+  * `--restart` : allows to apply a restart policy. It accepts the following values:
+    * `no` [default] : Do not automatically restart the container.
+    * `on-failure[:max-retries]` : Restart the container if it exits due to an error, which manifests as a non-zero exit code. Optionally, limit the number of times the Docker daemon attempts to restart the container using the :max-retries option.
+    * `always` : Always restart the container if it stops. If it is manually stopped, it is restarted only when Docker daemon restarts or the container itself is manually restarted.
+    * `unless-stopped` : Similar to always, except that when the container is stopped (manually or otherwise), it is not restarted even after Docker daemon restarts.
 
 
 ```bash
