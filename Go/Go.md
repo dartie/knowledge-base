@@ -1869,6 +1869,27 @@ func Partition(s string, sep string) (string, string, string) {
 }
 ```
 
+##### Split last element only
+
+```go
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func main() {
+	s := "Hello,Stack,Overflow"
+
+	first := s[0:strings.LastIndex(s, ",")]
+	fmt.Println(first)
+
+	last := s[strings.LastIndex(s, ",")+1:]
+	fmt.Println(last)
+}
+```
+
 ##### Trim
 
 Strips one or more characters from a string
