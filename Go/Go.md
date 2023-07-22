@@ -74,6 +74,7 @@
         - [Replace case insentive](#replace-case-insentive)
         - [Split](#split)
         - [Partition](#partition)
+        - [Split last element only](#split-last-element-only)
         - [Trim](#trim)
         - [TrimSpace](#trimspace)
         - [Title](#title)
@@ -175,6 +176,8 @@
     - [Real Path](#real-path)
     - [Detect the user's home directory without the use of cgo](#detect-the-users-home-directory-without-the-use-of-cgo)
       - [Detect the user's home directory without the use of cgo](#detect-the-users-home-directory-without-the-use-of-cgo-1)
+      - [Create directory](#create-directory)
+      - [Create folder path](#create-folder-path)
   - [Time](#time)
     - [Overview](#overview)
     - [Get current timestamp](#get-current-timestamp)
@@ -4770,6 +4773,23 @@ import homedir "github.com/mitchellh/go-homedir"
 * `homedir.Dir()` to get the home directory for a user 
 * `homedir.Expand()` to expand the ~ in a path to the home directory.
 
+
+#### Create directory
+
+```go
+myDir := "/tmp/topDir"
+// Create the top-level directory
+err := os.Mkdir(myDir, 0755)
+if err != nil {
+    panic(err)
+}
+```
+
+#### Create folder path
+
+```go
+os.MkdirAll(folderPath, os.ModePerm)
+```
 
 -----------------------------------------------------------------------------------
 
