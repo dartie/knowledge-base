@@ -2,14 +2,15 @@
 
 Ormai sono un elemento fondamentale delle colazioni di tutto il mondo, ma i cereali così come li conosciamo oggi nacquero per sbaglio alla fine del 1800 negli Stati Uniti, quando i fratelli Kellogg tentarono di riciclare del grano raffermo per servirlo ai pazienti della loro clinica.
 
-![Cover](A Short History of Breakfast Cereals.jpg)
-
-<audio controls autoplay>
-  <source src="A Short History of Breakfast Cereals.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+![](A%20Short%20History%20of%20Breakfast%20Cereals.jpg)
 
 --------------
+
+<div>
+<audio controls autoplay>
+    <source src="https://raw.githubusercontent.com/dartie/knowledge-base/main/English/SpeakUp/2022-10/A%20Short%20History%20of%20Breakfast%20Cereals.mp3" type="audio/mpeg">
+</audio>
+</div>
 
 
 The process is very simple: open the box, let the cereals fall into the [bowl](## "ciotola"), [pour](## "versare") some milk on it, and enjoy! Breakfast cereals are an everyday [staple](## "alimento base") in homes [throughout](## "in tutto") the Western world with numerous varieties on offer. Although warm cereals like [porridge](## "fiocchi d’avena cotti serviti con latte o acqua") (oatmeal in the US) have a long history globally, it is products by the US company Kellogg’s that have really revolutionised breakfast time – [for better, and for worse](## "nel bene e nel male"). It all started in a medical spa and resort in Michigan known as the Battle Creek Sanitarium, and with the invention of the [humble](## "umile") [corn flake](## "fiocco di mais").
@@ -33,44 +34,46 @@ Today the original Kellogg’s Corn Flakes is still considered a nutritious brea
 
 --------------
 
+<div style = "display:block; clear:both; page-break-after:always;"></div>
+
 # Glossary
-* **bowl** = ciotola
 * **staple** = alimento base
 * **advertising** = pubblicità
-* **sued** = denunciare
-* **dough** = impasto
-* **drive** = impulso
-* **shook up** = rivoluzionare
-* **shot up** = impennarsi
+* **notice** = rendersi conto
+* **weight** = peso
 * **pour** = versare
-* **leftovers** = resti
+* **humble** = umile
+* **porridge** = fiocchi d’avena cotti serviti con latte o acqua
+* **sued** = denunciare
+* **edge** = vantaggio
 * **urged** = spronare
-* **physician** = medico
+* **sanitarium** = casa di cura
+* **drive** = impulso
+* **targeted** = puntare a
+* **almonds** = mandorle
+* **for better, and for worse** = nel bene e nel male
+* **carbs** = carboidrati
 * **plant-based** = vegetariano
 * **sheets** = strati
-* **Witnessing** = essere testimone
-* **was all about** = distinguersi per, concentrarsi su
-* **tastier** = più saporiti
-* **targeted** = puntare a
-* **notice** = rendersi conto
-* **throughout** = in tutto
-* **porridge** = fiocchi d’avena cotti serviti con latte o acqua
-* **for better, and for worse** = nel bene e nel male
+* **Resentful** = indignato
 * **crunchier** = più croccante
+* **Witnessing** = essere testimone
 * **completion** = compimento
-* **humble** = umile
-* **carbs** = carboidrati
-* **wellness retreat** = ritiro di benessere
-* **curb** = frenare
+* **bowl** = ciotola
+* **corn flake** = fiocco di mais
+* **leftovers** = resti
+* **physician** = medico
 * **crispy** = croccante
 * **midday slumps** = cali a mezzogiorno
-* **hash** = pasticcio
+* **wellness retreat** = ritiro di benessere
+* **curb** = frenare
 * **wheat** = grano
-* **almonds** = mandorle
-* **weight** = peso
-* **corn flake** = fiocco di mais
-* **warned** = avvisare
-* **sanitarium** = casa di cura
-* **Resentful** = indignato
+* **was all about** = distinguersi per, concentrarsi su
+* **tastier** = più saporiti
 * **struck** = colpire
-* **edge** = vantaggio
+* **shook up** = rivoluzionare
+* **throughout** = in tutto
+* **hash** = pasticcio
+* **warned** = avvisare
+* **dough** = impasto
+* **shot up** = impennarsi

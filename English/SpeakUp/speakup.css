@@ -17,6 +17,27 @@ a:link {
     text-underline-offset: 3px;
 }
 
+a {
+    position: relative;
+    display: inline-block;
+}
+
+/* Box for translation text */
+a[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    top: -200%;
+    left: 0;
+    color: white;
+    background-color: #3F3F3F;  /* black; */
+    border-style: solid;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    width: 100px;
+    opacity: 100%;
+}
+
 h1 {
     color: #000000;
     margin: 11px 0px 0px;
@@ -30,4 +51,9 @@ h2 {
     font-size: 19px;
     font-weight: 900;
     text-transform: uppercase;
+}
+
+img {
+    width: 100%;
+    margin: 0 auto;
 }
