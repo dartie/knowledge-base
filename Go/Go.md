@@ -4004,7 +4004,8 @@ func zipFolder(source, target string) error {
 
 ### Iterate a path
 
-* [https://xojoc.pw/blog/golang-file-tree-traversal](https://xojoc.pw/blog/golang-file-tree-traversal)
+* [golangbyexample.com](https://golangbyexample.com/iterate-over-all-files-and-folders-go/)
+* [xojoc.pw](https://xojoc.pw/blog/golang-file-tree-traversal)
 
 ```go
 filepath.Walk("/path/to/folder", func(name string, info os.FileInfo, err error) error {
@@ -4012,6 +4013,15 @@ filepath.Walk("/path/to/folder", func(name string, info os.FileInfo, err error) 
     return nil
 })
 ```
+
+**Methods:**
+* `Name()`: string       - base name of the file
+* `Size()`: int64        - length in bytes for regular files; system-dependent for others
+* `Mode(): FileMode      - file mode bits
+* `ModTime()`: time.Time - modification time
+* `IsDir()`: bool        - abbreviation for Mode().IsDir()
+* `Sys()`: any           - underlying data source (can return nil)
+
 
 ```go
 package main
@@ -4031,6 +4041,26 @@ func main() {
         return nil
     })
     return files, err
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+    "io/ioutil"
+     "log"
+)
+
+func main() {
+    filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+        if err != nil {
+            log.Fatalf(err.Error())
+        }
+        fmt.Printf("File Name: %s\n", info.Name())
+        return nil
+    })
 }
 ```
 
@@ -4243,6 +4273,8 @@ func getXmlAttrs(node *xmlquery.Node) map[string]string {
 
 ### Parse JSON
 
+* [sohamkamani.com](https://www.sohamkamani.com/golang/json/)
+
 #### Parse JSON with struct (typed)
 
 ```go
@@ -4264,13 +4296,11 @@ func main() {
 	settingsStr := string(settingsBytes)
 
 	rawData := []byte(settingsStr)
-	var payload interface{}                  //The interface where we will save the converted JSON data.
+	var payload map[string]string
 	err := json.Unmarshal(rawData, &payload) // Convert JSON data into interface{} type
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	m := payload.(map[string]interface{}) // To use the converted data we will need to convert it into a map[string]interface{}
 }
 ```
 
