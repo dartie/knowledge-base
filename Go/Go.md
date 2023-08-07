@@ -139,6 +139,7 @@
     - [Get executable path](#get-executable-path)
   - [File](#file)
     - [Check if file exists](#check-if-file-exists)
+    - [Copy file](#copy-file)
     - [Get Folder content](#get-folder-content)
       - [Sort Files](#sort-files)
         - [Sort files by name](#sort-files-by-name)
@@ -3870,6 +3871,34 @@ if _, err := os.Stat("/path/to/whatever"); err == nil {
 }
 ```
 
+### Copy file
+
+```go
+func copy(src, dst string) (int64, error) {
+    sourceFileStat, err := os.Stat(src)
+    if err != nil {
+            return 0, err
+    }
+
+    if !sourceFileStat.Mode().IsRegular() {
+            return 0, fmt.Errorf("%s is not a regular file", src)
+    }
+
+    source, err := os.Open(src)
+    if err != nil {
+            return 0, err
+    }
+    defer source.Close()
+
+    destination, err := os.Create(dst)
+    if err != nil {
+            return 0, err
+    }
+    defer destination.Close()
+    nBytes, err := io.Copy(destination, source)
+    return nBytes, err
+}
+```
 
 ### Get Folder content
 
