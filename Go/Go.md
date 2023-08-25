@@ -3962,6 +3962,64 @@ func SortFileNameDescend(files []os.FileInfo) {
 }
 ```
 
+
+#### Create archive
+
+```go
+// create an archive from a list of files
+func CompressFiles(files []string, target string, keepStructure bool) error {
+	fmt.Println("creating zip archive")
+
+	//Create a new zip archive
+	archive, err := os.Create(target)
+	if err != nil {
+		return err
+		// this is to catch errors if any
+	}
+
+	//we use the defer key to close it, once we create an archive we need to close it using the defer keyword
+	defer archive.Close()
+	fmt.Println("archive file created successfully")
+
+	//Create a new zip writer
+	zipWriter := zip.NewWriter(archive)
+
+	for _, file := range files {
+		/* Add files to the zip archive */
+
+		//opening first file
+		f1, err := os.Open(file)
+		if err != nil {
+			return err
+		}
+		defer f1.Close()
+
+		// Adding file to archive: use Base for a flat structure
+		var w1 io.Writer
+		if keepStructure {
+			w1, err = zipWriter.Create(file)
+
+		} else {
+			w1, err = zipWriter.Create(filepath.Base(file))
+		}
+
+		if err != nil {
+			return err
+		}
+		if _, err := io.Copy(w1, f1); err != nil {
+			return err
+		}
+
+	}
+
+	// closing archive
+	zipWriter.Close()
+
+	return nil
+}
+```
+
+
 #### Compress a folder
 
 ```go
