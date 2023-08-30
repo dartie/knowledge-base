@@ -5076,6 +5076,13 @@ Short Hour Minute Second:  2017-07-04 12:47:20 AM
 Short Hour Minute Second:  2017-07-04 12:47:20 am
 ```
 
+### Timestamp for temp folder
+```go
+t := time.Now()
+workingFolder = filepath.Join("tmp", t.Format("20060102150405.000000000"))
+os.MkdirAll(workingFolder, 0755)
+```
+
 ### Time fun fact
 The layout string is a representation of the time stamp, `Jan 2 15:04:05 2006 MST`. An easy way to remember this value is that it holds, when presented in this order, the values (lined up with the elements above): `1 2 3 4 5 6 -7`
 
