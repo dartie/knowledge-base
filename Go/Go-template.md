@@ -15,6 +15,7 @@
       - [Using secure variable syntax `.$Var`](#using-secure-variable-syntax-var)
       - [Using shorter variable syntax `.Var`](#using-shorter-variable-syntax-var)
       - [Getting the index too](#getting-the-index-too)
+    - [Base template](#base-template)
     - [Nested template (include a template in another)](#nested-template-include-a-template-in-another)
     - [Template methods](#template-methods)
     - [Template Function mapping](#template-function-mapping)
@@ -472,6 +473,38 @@ OR
         </body>
     </html>
     ```
+
+### Base template
+
+* `base.html`
+
+  ```html
+  {{define "base"}}
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  </head>
+  <body>
+    {{block "content" .}}
+    {{end}}
+  </body>
+  </html>
+  {{end}}
+  ```
+
+* `index.html`
+
+  ```html
+  {{template "base" .}}
+
+  {{define "content"}}
+  <h1>Test Base as Django</h1>
+  {{end}
+  ```
 
 
 
