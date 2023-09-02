@@ -17,6 +17,7 @@
       - [Getting the index too](#getting-the-index-too)
     - [Base template](#base-template)
     - [Nested template (include a template in another)](#nested-template-include-a-template-in-another)
+    - [Difference between block and template keywords](#difference-between-block-and-template-keywords)
     - [Template methods](#template-methods)
     - [Template Function mapping](#template-function-mapping)
 
@@ -579,7 +580,11 @@ Final html rendered
 <h1>Footer</h1>
 ```
 
+### Difference between block and template keywords
 
+*[josephspurrier.com](https://www.josephspurrier.com/how-to-use-template-blocks-in-go-1-6)
+
+The block is designed to act just like template, but has a default value which can be overwritten using define actions whereas template does not have a default value and requires define actions. 
 
 ### Template methods
 
