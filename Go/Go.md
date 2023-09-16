@@ -143,6 +143,7 @@
     - [Get Folder content](#get-folder-content)
       - [Sort Files](#sort-files)
         - [Sort files by name](#sort-files-by-name)
+      - [Create archive](#create-archive)
       - [Compress a folder](#compress-a-folder)
     - [Iterate a path](#iterate-a-path)
     - [Get file info](#get-file-info)
@@ -159,6 +160,7 @@
       - [Float with decimal](#float-with-decimal)
     - [Write a file](#write-a-file)
   - [Database](#database)
+    - [Sqlite3 (Deprecated)](#sqlite3-deprecated)
     - [Sqlite3](#sqlite3)
       - [Init](#init)
       - [Update/Insert](#updateinsert)
@@ -183,6 +185,7 @@
     - [Overview](#overview)
     - [Get current timestamp](#get-current-timestamp)
     - [Format](#format)
+    - [Timestamp for temp folder](#timestamp-for-temp-folder)
     - [Time fun fact](#time-fun-fact)
     - [Sleep](#sleep)
     - [Format dates/times as in python](#format-datestimes-as-in-python)
@@ -4553,9 +4556,20 @@ func main() {
 
 ## Database
 
+### Sqlite3 (Deprecated)
+`"github.com/mattn/go-sqlite3"` is deprecated as it returns 
+
+```
+Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work. This is a stub
+```
+
+when the program is run from the compiled executable. Use `modernc.org/sqlite` instead.
+
+
 ### Sqlite3
 
 * [Tutorial](https://zetcode.com/golang/sqlite3/)
+
 
 #### Init
 
@@ -4564,7 +4578,7 @@ package main
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 /* Global variables */
@@ -4592,7 +4606,7 @@ package main
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 /* Global variables */
@@ -4635,7 +4649,7 @@ package main
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 /* Global variables */
