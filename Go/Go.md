@@ -4569,6 +4569,7 @@ when the program is run from the compiled executable. Use `modernc.org/sqlite` i
 ### Sqlite3
 
 * [Tutorial](https://zetcode.com/golang/sqlite3/)
+* Uses dbtype = `sqlite3` instead of `sqlite`
 
 
 #### Init
@@ -4590,9 +4591,9 @@ func main() {
 
 	// Connect to database
 	var dberr error
-	db, dberr = sql.Open("sqlite3", "./db.sqlite3"). // type (fixed for sqlite), "connection = database filepath for Sqlite)
-    if err != nil {
-		log.Fatal(err)
+	db, dberr = sql.Open("sqlite", "./db.sqlite3") // type (fixed for sqlite), "connection = database filepath for Sqlite)
+    if dberr != nil {
+		log.Fatal(dberr)
 	}
 	// defer close
 	defer db.Close()
@@ -4618,7 +4619,7 @@ func main() {
 
 	// Connect to database
 	var dberr error
-	db, dberr = sql.Open("sqlite3", "./db.sqlite3"). // type (fixed for sqlite), "connection = database filepath for Sqlite)
+	db, dberr = sql.Open("sqlite", "./db.sqlite3"). // type (fixed for sqlite), "connection = database filepath for Sqlite)
     if err != nil {
 		log.Fatal(err)
 	}
@@ -4661,7 +4662,7 @@ func main() {
 
 	// Connect to database
 	var dberr error
-	db, dberr = sql.Open("sqlite3", "./db.sqlite3"). // type (fixed for sqlite), "connection = database filepath for Sqlite)
+	db, dberr = sql.Open("sqlite", "./db.sqlite3"). // type (fixed for sqlite), "connection = database filepath for Sqlite)
     if err != nil {
 		log.Fatal(err)
 	}
