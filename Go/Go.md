@@ -161,7 +161,7 @@
     - [Write a file](#write-a-file)
   - [Database](#database)
     - [Sqlite3 (Deprecated)](#sqlite3-deprecated)
-    - [Sqlite3](#sqlite3)
+    - [Sqlite](#sqlite)
       - [Init](#init)
       - [Update/Insert](#updateinsert)
       - [Select one row](#select-one-row)
@@ -4565,11 +4565,12 @@ Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work. This 
 
 when the program is run from the compiled executable. Use `modernc.org/sqlite` instead.
 
+* Uses dbtype = `sqlite3` instead of `sqlite`
 
-### Sqlite3
+
+### Sqlite
 
 * [Tutorial](https://zetcode.com/golang/sqlite3/)
-* Uses dbtype = `sqlite3` instead of `sqlite`
 
 
 #### Init
