@@ -299,7 +299,7 @@
 ### Linux setup
 
 ```bash
-export version=1.16.4
+export version=$(curl https://go.dev/dl/?mode=json | grep -o 'go.*.linux-amd64.tar.gz' | head -n 1 | tr -d '\r\n' | grep -Po '\d\.\d\d.\d')
 
 # Download package
 wget https://golang.org/dl/go${version}.linux-amd64.tar.gz
