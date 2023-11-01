@@ -244,6 +244,27 @@ USER Alice
 RUN mkdir AliceFolder
 ```
 
+### Runs multiple service in one docker container
+
+Make a bash script with the following content. Eg `start.sh`:
+
+```Dockerfile
+# runs multiple commands simultaneously:
+
+mongod & # your first application
+P1=$!
+
+python script.py & # your second application
+P2=$!
+
+wait $P1 $P2
+```
+
+In your Dockerfile, start it with
+
+```bash
+CMD bash start.sh
+```
 
 ### Docker compose
 Provides a yaml configuration for Docker file.
