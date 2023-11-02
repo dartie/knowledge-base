@@ -6,10 +6,10 @@
 # Command line instructions
 Git global setup
 git config --global user.name "Dario Necco"
-git config --global user.email "dario_necco@programmingresearch.com"
+git config --global user.email "dnecco@gmail.com"
 
 # Create a new repository
-git clone http://mist.programmingresearch.com/csgtools/SMGenerator.git
+git clone https://github.com/dartie/knowledge-base/SMGenerator.git
 cd SMGenerator
 touch README.md
 git add README.md
@@ -19,14 +19,14 @@ git push -u origin master
 # Existing folder
 cd existing_folder
 git init
-git remote add origin http://mist.programmingresearch.com/csgtools/SMGenerator.git
+git remote add origin https://github.com/dartie/knowledge-base/.git
 git add .
 git commit
 git push -u origin master
 
 # Existing Git repository
 cd existing_repo
-git remote add origin http://mist.programmingresearch.com/csgtools/SMGenerator.git
+git remote add origin https://github.com/dartie/knowledge-base/.git
 git push -u origin --all
 git push -u origin --tags
 ```
@@ -62,6 +62,8 @@ git log --oneline
 
 ## Branches
 
+* [theserverside.com - 4 ways to create a Git branch quickly by example](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Git-Branch-Create-Example-Command-Checkout-Commit-Tag)
+
 ### List the branches on your repository
 
 ```bash
@@ -77,6 +79,12 @@ $ git branch <feature_branch>
 ### Switch to the feature branch to work on it.
 ```bash
 $ git checkout <feature_branch>    
+```
+
+### Create new branch and switch to it at the same time
+
+```bash
+git checkout -b <feature_branch>
 ```
     
 ### Commit the change to the feature branch:
