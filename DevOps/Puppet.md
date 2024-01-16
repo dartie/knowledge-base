@@ -1,6 +1,11 @@
 # Puppet
 
-# Steps
+- [Puppet](#puppet)
+  - [1 Download Puppet Enterprise](#1-download-puppet-enterprise)
+  - [2 Requirements](#2-requirements)
+    - [Open the required firewall ports](#open-the-required-firewall-ports)
+  - [3 Installation](#3-installation)
+
 
 ## 1 Download Puppet Enterprise
 
@@ -44,7 +49,7 @@
     firewall-cmd --reload
     ```
 
-# 3 Installation 
+## 3 Installation 
 
 1. Unpack the tar file.
     ```bash
