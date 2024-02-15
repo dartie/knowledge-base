@@ -253,8 +253,8 @@ To avoid this, a webhook can be set up to automate this action.
 
 1. First, you need to enable local webhooks within Gitlab. You can do this by navigating to 
     * **Admin** (the spanner icon in the top left) **->** 
-    * **Settings -> **
-    * **Network -> **
+    * **Settings ->**
+    * **Network ->**
     * **Outbound Requests ->** 
     * **Allow requests to the local network from hooks and services**
 2. Next, you need to get the value of the RBAC token, which will form part of the webhook. To get the value, run this command on the terminal console of the Puppet Enterprise server:
