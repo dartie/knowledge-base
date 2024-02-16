@@ -7052,7 +7052,7 @@ func notifySlack(webhookReceiver string, msgText string, msgType string, attachm
 
 #### simplesalesforce
 
-* [simpleforce](github.com/simpleforce/simpleforce)
+* [simpleforce](https://github.com/simpleforce/simpleforce)
 
 ```go
 package main

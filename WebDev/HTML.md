@@ -3,12 +3,19 @@
 
 <!-- toc -->
 
-- [Loader](#Loader)
-- [Disable browser caching with meta HTML tags](#Disable-browser-caching-with-meta-HTML-tags)
-- [Center things with style](#Center-things-with-style)
-  * [Text-Align Method](#Text-Align-Method)
-  * [Margin Auto Method](#Margin-Auto-Method)
-  * [Absolute Positioning Method](#Absolute-Positioning-Method)
+- [HTML](#html)
+  - [Elements](#elements)
+    - [Checkbox with text clickable and not selectable](#checkbox-with-text-clickable-and-not-selectable)
+  - [Loader](#loader)
+  - [Disable browser caching with meta HTML tags](#disable-browser-caching-with-meta-html-tags)
+  - [Align elements on the same line](#align-elements-on-the-same-line)
+    - [Method1](#method1)
+    - [Method2](#method2)
+  - [Center things with style](#center-things-with-style)
+    - [Text-Align Method](#text-align-method)
+    - [Margin Auto Method](#margin-auto-method)
+    - [Absolute Positioning Method](#absolute-positioning-method)
+  - [Navigation Top bar](#navigation-top-bar)
 
 <!-- tocstop -->
 
@@ -129,7 +136,7 @@ HTML
 ## Center things with style
 [How to center things with style in CSS](https://www.freecodecamp.org/news/how-to-center-things-with-style-in-css-dc87b7542689/)
 
-![be807685.png](:storage\\a508fb04-b9a5-4936-99bb-09c238254111\\c04e2c06.png)
+![be807685.png](HTML_attachments/c04e2c06.png)
 
 **Html code**
 ```html

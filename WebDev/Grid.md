@@ -52,21 +52,21 @@
     </html>
     ```
 
-    ![grid1.png](:storage\\fb837300-0f6a-4d8d-a8c8-c5b1264621de\\b9623a3e.png)
+    ![grid1.png](Grid_attachments/b9623a3e.png)
 
 1. Add column with 
     ```css
     grid-template-columns: 2fr;
     ```
 
-    ![grid2.jpg](:storage\\fb837300-0f6a-4d8d-a8c8-c5b1264621de\\117d2807.jpg)
+    ![grid2.jpg](Grid_attachments/117d2807.jpg)
 
 1. You can have additional columns, defining the width for each one: `
     ```css
     grid-template-columns: 2fr 1fr;
     ```
 
-    ![grid3.png](:storage\\fb837300-0f6a-4d8d-a8c8-c5b1264621de\\22937598.png)
+    ![grid3.png](Grid_attachments/22937598.png)
     
     * By `fr`
         ```css

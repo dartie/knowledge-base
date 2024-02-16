@@ -625,7 +625,7 @@ str.splitlines([keepends=True])  # Line breaks are not included in the resulting
 
 
 ## Regex
-source: [www.regexr.com](www.regexr.com)
+source: [www.regexr.com](https://www.regexr.com)
 
 `[]` : domain
 
