@@ -1,5 +1,46 @@
 # My Public Knowledge base
 
+
+## Usage
+
+### Code block with features
+
+* Title
+* Line numbers
+* Line highlighting
+* Code annotation (tooltip in code block)
+
+````
+```go title="hello.go" linenums="1" hl_lines="3 6"
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello!")  // (1)
+}
+```
+
+1.  :man_raising_hand: I'm a code annotation! I can contain `code`, __formatted
+    text__, images, ... basically anything that can be written in Markdown.
+
+````
+
+```go title="hello.go" linenums="1" hl_lines="3 6"
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello!")  // (1)
+}
+```
+
+1.  :man_raising_hand: I'm a code annotation! I can contain `code`, __formatted
+    text__, images, ... basically anything that can be written in Markdown.
+
+
+
 ## How to render the content
 
 1. Install `pip`
