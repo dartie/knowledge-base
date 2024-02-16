@@ -113,3 +113,35 @@ git diff --color-words --no-index orig.txt edited.txt | \\
 ```
 > `--color` or `--color-words` are required
 
+
+## Clean history from certain files
+* [https://stackoverflow.com/a/32432330/4768254](https://stackoverflow.com/a/32432330/4768254)
+* [https://stackoverflow.com/a/58252169/4768254](https://stackoverflow.com/a/58252169/4768254)
+
+### [Git filter repo](https://github.com/newren/git-filter-repo)
+
+* Install it first. 
+    ```
+    python3 -m pip install --user git-filter-repo
+    ```
+
+```bash
+git filter-repo --path secrets.yml --invert-paths HEAD
+```
+
+!!! note
+
+    `HEAD` means it will change only your current branch commits.
+    
+    Remove `HEAD` and it will go over all your commits in all your branches.
+
+
+### [BFG](https://rtyley.github.io/bfg-repo-cleaner/)
+
+```bash
+git clone --mirror http://github.com/dartie/knowledge-base
+java -jar bfg-1.14.0.jar --delete-files *mp3  "knowledge-base.git"
+cd knowledge-base
+git reflog expire --expire=now --all && git gc --prune=now --aggressive
+git push
+```
