@@ -16,6 +16,8 @@
   - [Add CSS style](#add-css-style)
     - [Add style with Bootstrap](#add-style-with-bootstrap)
   - [Component properties](#component-properties)
+    - [Inline properties](#inline-properties)
+    - [Object properties](#object-properties)
 
 
 ## Why React
@@ -166,7 +168,9 @@ export default class AppFooter extends Component {
         return (
             <Fragment>
                 <hr />
-                <p>Copyright &copy; { currentYear } Acme Ltd.</p>  // (1)
+
+                // (1)
+                <p>Copyright &copy; { currentYear } Acme Ltd.</p>
             </Fragment>
         );
     }
@@ -181,6 +185,17 @@ export default class AppFooter extends Component {
 ## Add CSS style
 
 Style is added using `className` attribute. Remember this is XML in javascript, and `class` keyword is already used by javascript. 
+
+```css title="src/index.css" linenums="1"
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;1,100;1,300&display=swap');
+
+.app {
+    max-width: 80%;
+    margin: 0 auto;
+    font-family: 'Roboto';
+}
+```
+
 
 ```js title="src/index.js" linenums="1" hl_lines="4 9"
 import React, { Component } from 'react';
@@ -204,17 +219,6 @@ class App extends Component {
 ReactDOM.render(<App/>, document.querySelector("#root"))
 ```
 
-
-```css title="src/index.css" linenums="1"
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;1,100;1,300&display=swap');
-
-.app {
-    max-width: 80%;
-    margin: 0 auto;
-    font-family: 'Roboto';
-}
-```
-
 ### Add style with Bootstrap
 
 1. Install Bootstrap
@@ -236,9 +240,7 @@ ReactDOM.render(<App/>, document.querySelector("#root"))
         render () {
             return (
                 <div className="app">
-                    <div> 
-                        <h1>Hello world!</h1>
-                    </div>
+                    <AppContent>
                     <AppFooter>
                 </div> 
             );
@@ -272,3 +274,155 @@ ReactDOM.render(<App/>, document.querySelector("#root"))
 
 They allow to have dynamic data and make the components reusable.
 
+### Inline properties
+
+Set them with:
+
+```js
+<AppHeader title="Cool App!" subject="Subject">
+```
+
+Use them with:
+
+```js
+{ this.props.title }
+```
+
+Let's create another component: AppHeader
+
+```js title="src/AppHeader.js" linenums="1" hl_lines="7"
+import React, { Component } from "react";
+
+export default class AppHeader extends Component {
+
+    render() {
+        return (
+            // (1)
+            <h1>{ this.props.title }</h1>
+        )
+    }
+}
+```
+
+1. Use the properties with `{ this.props.propsName }` syntax
+
+
+
+```js title="src/index.js" linenums="1" hl_lines="3 15"
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import AppFooter from './AppHeader';
+import AppFooter from './AppFooter';
+import AppContent from './AppContent';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './index.css'
+
+class App extends Component {
+    render () {
+        return (
+            <div className="app">
+                <AppHeader title="Cool App!" subject="My subject">  // (1)
+                <AppContent>
+                <AppFooter>
+            </div> 
+        );
+    }
+}
+
+ReactDOM.render(<App/>, document.querySelector("#root"))
+``` 
+
+1. Pass the properties using `propertyName="propertyValue"` syntax
+
+
+### Object properties
+
+Set them with:
+
+```js
+// Define property object
+const myProps = {
+    title: "My Cool App!",    
+    subject: "My subject",    
+    favorite_color: "red",    
+}
+
+...
+
+// pass the object to the component
+<AppHeader { ...myProps }>
+```
+
+Use them with:
+
+```js
+{ this.props.title }
+```
+
+Let's create another component: AppHeader
+
+```js title="src/AppHeader.js" linenums="1" hl_lines="7"
+import React, { Component } from "react";
+
+export default class AppHeader extends Component {
+
+    render() {
+        return (
+            // (1)
+            <h1>{ this.props.title }</h1>  
+        )
+    }
+}
+```
+
+1. Use the properties with `{ this.props.propsName }` syntax
+
+
+
+```js title="src/index.js" linenums="1" hl_lines="13-17 21"
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import AppFooter from './AppHeader';
+import AppFooter from './AppFooter';
+import AppContent from './AppContent';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './index.css'
+
+class App extends Component {
+    render () {
+        const myProps = {  // (1)
+            title: "My Cool App!",    
+            subject: "My subject",    
+            favorite_color: "red",    
+        } 
+
+    return (
+            <div className="app">
+                <AppHeader { ...myProps }>
+                <AppContent>
+                <AppFooter>
+            </div> 
+        );
+    }
+}
+
+ReactDOM.render(<App/>, document.querySelector("#root"))
+``` 
+
+1. Pass the properties using 
+    ```js
+    // Define property object
+    const myProps = {
+        title: "My Cool App!",    
+        subject: "My subject",    
+        favorite_color: "red",    
+    }
+
+    ...
+    // pass the object to the component
+    <AppHeader { ...myProps }>
+    ```
