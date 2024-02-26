@@ -6,6 +6,7 @@
 - [React](#react)
   - [Why React](#why-react)
   - [Requirements](#requirements)
+  - [Resources](#resources)
   - [Setup](#setup)
     - [Install on Fedora](#install-on-fedora)
   - [Getting started](#getting-started)
@@ -18,6 +19,9 @@
   - [Component properties](#component-properties)
     - [Inline properties](#inline-properties)
     - [Object properties](#object-properties)
+    - [React events](#react-events)
+    - [Refs](#refs)
+    - [State](#state)
 
 
 ## Why React
@@ -28,6 +32,18 @@
 * [Node.js](https://nodejs.org/en/download/current)
 * [NPM](https://docs.npmjs.com/)
 * [npx](https://www.npmjs.com/package/npx) : [package runner tool that comes with npm 5.2+](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b)
+
+
+## Resources
+
+* Book [Road To React](https://www.roadtoreact.com/)
+* Docs [React](https://react.dev/)
+* Course [Deep Dive Into Modern Web Development](https://fullstackopen.com/en/)
+* Docs [Learn reactjs from scratch - ngeducate](https://ngeducate.blogspot.com/p/learn-reactjs-from-scratch.html)
+* Course [Learn React (scrimba)](https://scrimba.com/learn/learnreact/introduction-to-react-coa99496098ff5fb511f5235f)
+* Book [Eloquent Javascript: A Modern Introduction to Programming - Marijn Haverbeke](https://eloquentjavascript.net/index.html)
+* Mozilla [React_getting_started - Mozilla](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started)
+
 
 
 ## Setup
@@ -426,3 +442,257 @@ ReactDOM.render(<App/>, document.querySelector("#root"))
     // pass the object to the component
     <AppHeader { ...myProps }>
     ```
+
+### React events
+
+```js title="src/AppContent.js" linenums="1" hl_lines=""
+import React, { Component } from 'react';
+
+export default class AppContent extends Component {
+
+    fetchList = () => {
+        console.log("I was clicked");
+    }
+
+    render(){
+        return (
+            <p>
+                This is the content
+
+                <br />
+
+                <button onClick={this.fetchList} className="btn btn-primary">Fetch Data</button>
+            </p>
+        )
+    }
+}
+```
+
+```js title="src/AppContent.js" linenums="1" hl_lines=""
+import React, { Component } from 'react';
+
+export default class AppContent extends Component {
+
+    fetchList = () => {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then((response) => response.json())
+            .then(json => {
+                console.log(json);
+
+                let posts = document.getElementById("post-list");
+
+                json.forEach(function(obj){
+                    let li = document.createElement("li");
+                    li.appendChild(document.createTextNode(obj.title));
+                    posts.appendChild(li);
+                })
+            })
+    }
+
+    render(){
+        return (
+            <div>
+                This is the content
+
+                <br />
+
+                <button onClick={this.fetchList} className="btn btn-primary">Fetch Data</button>
+
+                <hr />
+
+                <ul id="post-list"></ul>
+            </div>
+        )
+    }
+}
+```
+
+!!! failure
+    Arrow functions are mandatory to access the keyword `this`.
+    If we use the old function definition syntax:
+
+    ```js title="src/AppContent.js" linenums="1" hl_lines="9 14"
+    import React, { Component } from 'react';
+
+    export default class AppContent extends Component {
+
+        anotherFunction() {
+            console.log("Another function");
+        }
+
+        fetchList () {
+            fetch('https://jsonplaceholder.typicode.com/posts')
+                .then((response) => response.json())
+                .then(json => {
+                    console.log(json);
+                    this.anotherFunction();
+
+                    let posts = document.getElementById("post-list");
+
+                    json.forEach(function(obj){
+                        let li = document.createElement("li");
+                        li.appendChild(document.createTextNode(obj.title));
+                        posts.appendChild(li);
+                    })
+                })
+        }
+
+        render(){
+            return (
+                <div>
+                    This is the content
+
+                    <br />
+
+                    <button onClick={this.fetchList} className="btn btn-primary">Fetch Data</button>
+
+                    <hr />
+
+                    <ul id="post-list"></ul>
+                </div>
+            )
+        }
+    }
+    ```
+
+!!! success
+    Function should be defined using the arrow syntax introduced in ES6 version, which allow accessing other functions with `this` keyword.
+
+
+    ```js title="src/AppContent.js" linenums="1" hl_lines="9 14"
+    import React, { Component } from 'react';
+
+    export default class AppContent extends Component {
+
+        anotherFunction = () => {
+            console.log("Another function");
+        }
+
+        fetchList = () => {
+            fetch('https://jsonplaceholder.typicode.com/posts')
+                .then((response) => response.json())
+                .then(json => {
+                    console.log(json);
+                    this.anotherFunction();
+
+                    let posts = document.getElementById("post-list");
+
+                    json.forEach(function(obj){
+                        let li = document.createElement("li");
+                        li.appendChild(document.createTextNode(obj.title));
+                        posts.appendChild(li);
+                    })
+                })
+        }
+
+        render(){
+            return (
+                <div>
+                    This is the content
+
+                    <br />
+
+                    <button onClick={this.fetchList} className="btn btn-primary">Fetch Data</button>
+
+                    <hr />
+
+                    <ul id="post-list"></ul>
+                </div>
+            )
+        }
+    }
+    ```
+
+    !!! note "Javascript function definitions"
+
+        1. Traditional way
+ 
+            ```js 
+            function handleClick () {
+            enableOTPBox(false);
+            };
+            ```
+ 
+        2. arrow function
+        
+            ```js
+            const handleClick = () =>{
+            enableOTPBox(false);
+            };
+            ```
+ 
+        3. Expression function
+
+            ```js
+            let handleClick = function handleClick(){
+            enableOTPBox(false);
+            };
+            ```
+
+
+### Refs
+
+React has its own life cycle and elements appear and disappear on the DOM without your really knowing when that's happening because it all happens asynchronously.
+
+**Refs** allow to create reusable components with unique reference. If `id` is used as reference, and the component is used more than once, you'll get multiple components with the same id, which is not great.
+
+!!! Warning
+    Overuse of refs will almost certainly result in problems in your application as grows in complexity and the easiest way to avoid problems is to not use refs unless it's absolutely critical that you do so. 
+
+```js title="src/AppContent.js" linenums="1" hl_lines="5-8 17 38"
+import React, { Component } from 'react';
+
+export default class AppContent extends Component {
+
+    constructor(props) {  // (1)
+        super(props);
+        this.listRef = React.createRef();
+    }
+
+    fetchList = () => {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then((response) => response.json())
+            .then(json => {
+                console.log(json);
+
+                //let posts = document.getElementById("post-list");
+                const posts = this.listRef.current;  // (3)
+
+                json.forEach(function(obj){
+                    let li = document.createElement("li");
+                    li.appendChild(document.createTextNode(obj.title));
+                    posts.appendChild(li);
+                })
+            })
+    }
+
+    render(){
+        return (
+            <div>
+                This is the content
+
+                <br />
+
+                <button onClick={this.fetchList} className="btn btn-primary">Fetch Data</button>
+
+                <hr />
+
+                <ul ref={this.listRef}></ul>  
+                // (2)
+            </div>
+        )
+    }
+}
+```
+
+1. `constructor` method always takes the argument `props` (you can call it however you want, but tipically called **props**).
+A constructor is a method that is called automatically when we created an object from that class. It can manage initial initialization tasks such as defaulting certain object properties or sanity testing the arguments passed in. Simply placed, the constructor is a method that helps in the creation of objects. 
+The constructor is no different in React. This can connect event handlers to the component and/or initialize the component’s local state. Before the component is mounted, the constructor() function is shot, and, like most things in React, it has a few rules that you can follow when using them.
+First thing to do is call `super(props)`.
+`this.listRef = React.createRef();` creates the reference
+
+2. Use `ref={this.listRef}` (defined in the constructur above) as reference of the element, instead of the `id`.
+
+3. Refer to the element (`ul` in our example) using `ref` instead of `id`.
+
+### State
