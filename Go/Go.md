@@ -239,6 +239,7 @@
     - [Embed a folder and access all files](#embed-a-folder-and-access-all-files)
     - [Recreate embedded filesystems from embed.FS](#recreate-embedded-filesystems-from-embedfs)
   - [Send email](#send-email)
+  - [Publish Go module](#publish-go-module)
   - [Misc](#misc)
     - [Windows registry](#windows-registry)
     - [Notify in os](#notify-in-os)
@@ -6893,6 +6894,40 @@ func main() {
 ```
 
 -----------------------------------------------------------------------------------
+
+## Publish Go module
+
+* [Brian Morrison - Build & Publish Your Own Go Package](https://www.youtube.com/watch?v=KNHEXOoV-H4)
+
+1. Develop package (bear in mind that function can be used if starting with capital case)
+1. Init go package with
+    ```bash
+    go mod init github.com/dartie/converters
+    ```
+1. Create a `main.go` with package name on top (it doesn't need to match with the init command)
+1. In github, create the repository
+1. Copy repo https url
+1. Run
+    ```bash
+    git init  # (1)
+    git remote add origin $URL  # (2)
+    git add .  # (3)
+    git commit -m "message"  # (4)
+    git push --set-upstream origin master  # (5)
+    git tag "v.1.0.0"  # (6)
+    git push --tags  # (7)
+    ```
+    1. Init git repository
+    2. Set the repository url
+    3. Add all files to the version control
+    4. Commit with a message
+    5. Push to master branch
+    6. Create a GIT tag. Modules must be semantically versioned according to semver, usually in the form `v(major).(minor).(patch)`, such as v0.1.0, v1.2.3, or v1.5.0-rc.1. The leading `v` is required.
+    7. Push tags to GIT
+
+
+-----------------------------------------------------------------------------------
+
 
 ## Misc
 
