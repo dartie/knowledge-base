@@ -695,4 +695,61 @@ First thing to do is call `super(props)`.
 
 3. Refer to the element (`ul` in our example) using `ref` instead of `id`.
 
+
 ### State
+
+```js title="src/AppContent.js" linenums="1" hl_lines="5-8 17 38"
+import React, { Component } from 'react';
+
+export default class AppContent extends Component {
+
+    state = {posts: []}  // (1)
+
+    constructor(props) {
+        super(props);
+        this.listRef = React.createRef();
+    }
+
+    fetchList = () => {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then((response) => response.json())
+            .then(json => {
+                this.setState({posts: json});  // (2)
+            })
+    }
+
+    ckickedItem = (x) => {
+        console.log("clicked", x);
+    }
+
+    render(){
+        return (
+            <div>
+                This is the content
+
+                <br />
+
+                <button onClick={this.fetchList} className="btn btn-primary">Fetch Data</button>
+
+                <hr />
+
+                <ul>
+                    // (3)
+                    {this.state.posts.map((c) => (  // (4)
+                        <li key={c.id}>
+                            <a href="#!" onClick={() => this.clickedItem(c.id)}>
+                                {c.title}
+                            </a>
+                        </li>
+                    ))}
+                </ul>  
+            </div>
+        )
+    }
+}
+```
+
+1. a
+2. b
+3. c
+4. `map()` creates a new array from calling a function for every array element. <br> • does not execute the function for empty elements. <br> • does not change the original array.
