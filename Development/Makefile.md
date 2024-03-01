@@ -902,8 +902,11 @@ build:
 	for p in $(PLATFORMS); do \
 		for a in $(ARCHS); do \
 			printf "Compiling %s - %s...\r" $$p $$a; \
-			sleep 1; \
-			if GOOS=$$p GOARCH=$$a go build -o bin/main-$$p-$$a *.go; then \
+			ext=""; \
+			if [ $$p == "windows" ]; then \
+				ext=".exe"; \
+			fi; \
+			if GOOS=$$p GOARCH=$$a go build -o $(APP)-$$p-$$a$$ext *.go; then \
 				$(call printStepCompleted, "$$p - $$a -  done                 "); \
 			else \
 				$(call printError, "$$p - $$a -  failed                 "); \
