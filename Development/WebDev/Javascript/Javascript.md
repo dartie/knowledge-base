@@ -1,5 +1,20 @@
 # Javascript
 
+- [Javascript](#javascript)
+  - [Communicate with the server without submit](#communicate-with-the-server-without-submit)
+    - [Dedicated function for ajax](#dedicated-function-for-ajax)
+  - [Repeat function every n seconds](#repeat-function-every-n-seconds)
+  - [Iterate a Html table](#iterate-a-html-table)
+  - [Trigger event](#trigger-event)
+    - [Old way](#old-way)
+    - [Without passing arguments](#without-passing-arguments)
+    - [setAttribute()](#setattribute)
+    - [Binding multiple events to a listener?](#binding-multiple-events-to-a-listener)
+  - [Set current date/time to input element](#set-current-datetime-to-input-element)
+- [Dates](#dates)
+  - [Sort a string date array](#sort-a-string-date-array)
+
+
 ## Communicate with the server without submit
 * https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX/Getting_Started
 * https://www.w3schools.com/asp/asp_ajax_asp.asp
@@ -213,4 +228,25 @@ var currentTime = date.toISOString().substring(11,16);
 
 document.getElementById('currentDate').value = currentDate;
 document.getElementById('currentTime').value = currentTime;
+```
+
+# Dates
+
+## Sort a string date array
+
+* [Sort a string date array](https://stackoverflow.com/questions/30691066/sort-a-string-date-array)
+
+
+```js
+var data = ["09/06/2015", "25/06/2015", "22/06/2015", "25/07/2015", "18/05/2015"];
+
+
+data.sort(function(a,b) {
+  a = a.split('/').reverse().join('');
+  b = b.split('/').reverse().join('');
+  return a > b ? 1 : a < b ? -1 : 0;
+  
+  // return a.localeCompare(b);         // <-- alternative 
+  
+});
 ```
