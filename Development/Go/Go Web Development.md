@@ -51,6 +51,174 @@ func Index(w http.ResponseWriter, r *http.Request) {
 ```
 
 
+## Routing
+
+### Method check
+
+
+* From Go 1.22 the method can be specified in the route
+
+=== "Old code"
+
+    ```go linenums="1" hl_lines="10-14"
+    package main
+
+    import "net/http"
+
+    func main() {
+
+        mux := http.NewServeMux()
+
+        mux.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+            if r.Method != http.MethodGet {
+                w.WriteHeader(http.StatusMethodNotAllowed)
+                w.Write([]byte(""))
+                return
+            }
+
+            w.Write([]byte(`Hello`))
+        })
+
+        if err := http.ListenAndServe(":9002", mux); err != nil {
+            panic(err)
+        }
+    }
+    ```
+
+=== "New Code"
+
+    ```go linenums="1" hl_lines="9"
+    package main
+
+    import "net/http"
+
+    func main() {
+
+        mux := http.NewServeMux()
+
+        mux.HandleFunc("GET /hello", func(w http.ResponseWriter, r *http.Request) {
+            w.Write([]byte(`Hello`))
+        })
+
+        if err := http.ListenAndServe(":9002", mux); err != nil {
+            panic(err)
+        }
+    }
+    ```
+
+
+### Path parameter
+
+=== "Old Code"
+
+    ```go linenums="1" hl_lines="15-22"
+    package main
+
+    import (
+        "fmt"
+        "net/http"
+        "strings"
+    )
+
+    func main() {
+
+        mux := http.NewServeMux()
+
+        mux.HandleFunc("/hello/", func(w http.ResponseWriter, r *http.Request) {
+
+            path := r.URL.Path
+
+            parts := strings.Split(path, "/")
+
+            if len(parts) < 3 {
+                http.Error(w, "Invalid request", http.StatusBadRequest)
+                return
+            }
+
+            name := parts[2]
+
+            w.Write([]byte(fmt.Sprintf("Hello %s!", name)))
+        })
+
+        if err := http.ListenAndServe(":9002", mux); err != nil {
+            panic(err)
+        }
+    }
+    ```
+
+
+=== "New Code"
+
+    ```go linenums="1" hl_lines="13"
+    package main
+
+    import (
+        "fmt"
+        "net/http"
+        "strings"
+    )
+
+    func main() {
+
+        mux := http.NewServeMux()
+
+        mux.HandleFunc("GET /hello/{name}", func(w http.ResponseWriter, r *http.Request) {
+
+            name := r.PathValue("name")
+
+            w.Write([]byte(fmt.Sprintf("Hello %s!", name)))
+        })
+
+        if err := http.ListenAndServe(":9002", mux); err != nil {
+            panic(err)
+        }
+    }
+    ```
+
+**Multiple Path parameters:**
+
+`{name...}`
+
+```go linenums="1" hl_lines="13"
+package main
+
+import (
+    "fmt"
+    "net/http"
+    "strings"
+)
+
+func main() {
+
+    mux := http.NewServeMux()
+
+    mux.HandleFunc("GET /hello/{name...}", func(w http.ResponseWriter, r *http.Request) {
+
+        name := r.PathValue("name")
+
+        w.Write([]byte(fmt.Sprintf("Hello %s!", name)))
+    })
+
+    if err := http.ListenAndServe(":9002", mux); err != nil {
+        panic(err)
+    }
+}
+```
+
+### Match a route
+
+* Match a prefix
+
+    ```go
+    mux.HandleFunc("GET /hello", func(w http.ResponseWriter, r *http.Request) {
+    ```
+
+* Match an exact path
+
+    ```go
+    mux.HandleFunc("GET /hello/{$}", func(w http.ResponseWriter, r *http.Request) {
+    ```
+
 
 ## Render a template
 
