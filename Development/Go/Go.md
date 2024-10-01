@@ -29,6 +29,7 @@
     - [version](#version)
     - [env](#env)
     - [get](#get)
+      - [Update all Go packages to the latest version](#update-all-go-packages-to-the-latest-version)
     - [run](#run)
     - [build](#build)
       - [Cross compilation](#cross-compilation)
@@ -806,6 +807,41 @@ Add dependencies to current module and install them
 
 Looks in all files for import paths and download the dependencies to `$GOPATH/src`
 
+
+
+#### Update all Go packages to the latest version
+
+* [gosamples.dev](https://gosamples.dev/update-all-packages/)
+
+- Update all dependencies to the latest version in the current directory and its subdirectories.
+
+  ```bash
+  go get -u ./...
+  ```
+
+- Update all dependencies in the current directory and its subdirectories **including test dependencies**.
+
+  ```bash
+  go get -t -u ./...
+  ```
+
+- Update all packages in the main [module](https://go.dev/ref/mod) and all its dependencies **including test dependencies**.
+
+  ```bash
+  go get -u all
+  ```
+
+- Update all dependencies in the current directory only.
+
+  ```bash
+  go get -u
+  ```
+
+!!! tip
+    After running the `go get` command, it is a good practice to also run `go mod tidy`. 
+    This command ensures that the `go.mod` file is in sync with your source code and cleans it up by removing any unused or unnecessary dependencies that may have been created after updating packages to new version.
+
+
 ### run
 
 ### build
@@ -819,7 +855,7 @@ Downloads all packages required and compiles the source code, creating the binar
     ```go
     # 64-bit
     GOOS=linux GOARCH=amd64 go build -o bin/app-amd64-linux app.go
-
+    
     # 32-bit
     GOOS=linux GOARCH=386 go build -o bin/app-386-linux app.go
     ```
@@ -845,14 +881,14 @@ Downloads all packages required and compiles the source code, creating the binar
 
     * 64bit
         ```go
-
+        
         ```
 
 * For MacOS
     ```go
     # 64-bit
     GOOS=darwin GOARCH=amd64 go build -o bin/app-amd64-darwin app.go
-
+    
     # 32-bit
     GOOS=darwin GOARCH=386 go build -o bin/app-386-darwin app.go
     ```
@@ -5490,7 +5526,7 @@ fmt.Println(string(out))
 
     ```go
     package main
-
+    
     import (
         "bufio"
         "fmt"
@@ -5499,11 +5535,11 @@ fmt.Println(string(out))
         "os/exec"
         "strings"
     )
-
+    
     func main() {
         cmdName := "ping 127.0.0.1"
         cmdArgs := strings.Fields(cmdName)
-
+    
         cmd := exec.Command(cmdArgs[0], cmdArgs[1:len(cmdArgs)]...)
         stdout, _ := cmd.StdoutPipe()
         cmd.Start()
@@ -5523,7 +5559,7 @@ fmt.Println(string(out))
                 os.Exit(0)
             }
         }
-
+    
         cmd.Wait()
     }
     ```
@@ -5564,13 +5600,13 @@ funcmain() {
 
 
 * `Output()` method waits for the command to execute. Good for commands returning the output immediately (`ls`)
-    
+  
     ```go
     // create a new *Cmd instance
     // here we pass the command as the first argument and the arguments to pass to the command as the
     // remaining arguments in the function
     cmd := exec.Command("ls", "./")
-
+    
     // The `Output` method executes the command and
     // collects the output, returning its value
     out, err := cmd.Output()
@@ -5587,11 +5623,11 @@ funcmain() {
 
     ```go
     cmd := exec.Command("ping", "google.com")
-
+    
     // pipe the commands output to the applications
     // standard output
     cmd.Stdout = os.Stdout
-
+    
     // Run still runs the command and waits for completion
     // but the output is instantly piped to Stdout
     if err := cmd.Run(); err != nil {
@@ -5601,13 +5637,13 @@ funcmain() {
 
     ```
     > go run shellcommands/main.go
-
+    
     PING google.com (142.250.195.142): 56 data bytes
     64 bytes from 142.250.195.142: icmp_seq=0 ttl=114 time=9.397 ms
     64 bytes from 142.250.195.142: icmp_seq=1 ttl=114 time=37.398 ms
     64 bytes from 142.250.195.142: icmp_seq=2 ttl=114 time=34.050 ms
     64 bytes from 142.250.195.142: icmp_seq=3 ttl=114 time=33.272 ms
-
+    
     # ...
     # and so on
     ```
@@ -5763,18 +5799,18 @@ Since golang version 1.12, the exit code is available natively and in a cross-pl
 
     ```go
     package main
-
+    
     import "os/exec"
     import "log"
     import "syscall"
-
+    
     func main() {
         cmd := exec.Command("git", "blub")
-
+    
         if err := cmd.Start(); err != nil {
             log.Fatalf("cmd.Start: %v", err)
         }
-
+    
         if err := cmd.Wait(); err != nil {
             if exiterr, ok := err.(*exec.ExitError); ok {
                 log.Printf("Exit Status: %d", exiterr.ExitCode())
@@ -5841,21 +5877,21 @@ Since golang version 1.12, the exit code is available natively and in a cross-pl
 
     ```go
     err := cmd.Run()
-
+    
     var (
         ee *exec.ExitError
         pe *os.PathError
     )
-
+    
     if errors.As(err, &ee) {
         log.Println("exit code error:", ee.ExitCode()) // ran, but non-zero exit code
-
+    
     } else if errors.As(err, &pe) {
         log.Printf("os.PathError: %v", pe) // "no such file ...", "permission denied" etc.
-
+    
     } else if err != nil {
         log.Printf("general error: %v", err) // something really bad happened!
-
+    
     } else {
         log.Println("success!") // ran without error (exit code zero)
     }
@@ -6837,22 +6873,22 @@ func main() {
     ```go
     //go:embed someFS/*
     var bdFS embed.FS
-
+    
     // Just replicate folder Structure
     rebed.Tree(bdFS, "")
-
+    
     // Make empty files
     rebed.Touch(bdFS, "")
-
+    
     // Recreate entire FS
     rebed.Write(bdFS, "")
-
+    
     // Recreate FS without modifying existing files
     rebed.Patch(bdFS, "")
-
+    
     // Runs Patch if no conflicting file is found, else error.
     err := rebed.Create(bdFS, "")
-
+    
     /* Walk allows you operate on each file as you wish */
     ```
 
